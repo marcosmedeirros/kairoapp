@@ -1,0 +1,13 @@
+<h2>Agenda</h2>
+<form (ngSubmit)="addActivity()" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+  <input [(ngModel)]="newActivity.title" name="title" placeholder="Título" required />
+  <input [(ngModel)]="newActivity.description" name="description" placeholder="Descrição" />
+  <input [(ngModel)]="newActivity.date" name="date" type="date" required />
+  <input [(ngModel)]="newActivity.time" name="time" type="time" required />
+  <button type="submit">Adicionar</button>
+</form>
+<ul>
+  <li *ngFor="let activity of activities">
+    {{ activity.date }} {{ activity.time }} – <strong>{{ activity.title }}</strong> {{ activity.description ? '(' + activity.description + ')' : '' }}
+  </li>
+</ul>

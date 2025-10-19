@@ -1,0 +1,11 @@
+<h2>Treinos</h2>
+<form (ngSubmit)="addNote()" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+  <input [(ngModel)]="newNote.date" name="date" type="date" required />
+  <input [(ngModel)]="newNote.note" name="note" placeholder="Anotações de treino" required />
+  <button type="submit">Registrar</button>
+</form>
+<ul>
+  <li *ngFor="let n of notes">
+    {{ n.date }} – {{ n.note }}
+  </li>
+</ul>
