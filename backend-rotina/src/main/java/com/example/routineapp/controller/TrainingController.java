@@ -21,19 +21,11 @@ public class TrainingController {
     }
 
     @PostMapping
-
-    public ResponseEntity<String> create(@RequestBody TrainingNote note) {
-        if (note.getDate() == null || note.getNote() == null || note.getNote().isEmpty()) {
-            return ResponseEntity.badRequest().body("Data e anotação são obrigatórias.");
-        }
-        repository.save(note);
-        return ResponseEntity.status(201).body("Anotação de treino criada.");
     public ResponseEntity<TrainingNote> create(@RequestBody TrainingNote note) {
         if (note.getDate() == null || note.getNote() == null || note.getNote().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         TrainingNote saved = repository.save(note);
         return ResponseEntity.status(201).body(saved);
-
     }
 }

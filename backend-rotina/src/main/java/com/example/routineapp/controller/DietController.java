@@ -21,13 +21,6 @@ public class DietController {
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody DietLog log) {
-        if (log.getDate() == null) {
-            return ResponseEntity.badRequest().body("Data é obrigatória.");
-        }
-        repository.save(log);
-        return ResponseEntity.status(201).body("Registro de dieta criado.");
-
     public ResponseEntity<DietLog> create(@RequestBody DietLog log) {
         if (log.getDate() == null) {
             return ResponseEntity.badRequest().build();

@@ -17,20 +17,20 @@
         <div class="form-group">
           <label for="type">Tipo de Meta *</label>
           <select id="type" [(ngModel)]="newGoal.type" name="type" required>
-            <option value="weekly">📅 Semanal</option>
-            <option value="monthly">📆 Mensal</option>
-            <option value="yearly">📊 Anual</option>
+            <option value="WEEKLY">📅 Semanal</option>
+            <option value="MONTHLY">📆 Mensal</option>
+            <option value="YEARLY">📊 Anual</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="start_date">Data de Início</label>
-          <input id="start_date" [(ngModel)]="newGoal.start_date" name="start_date" type="date" />
+          <label for="startDate">Data de Início</label>
+          <input id="startDate" [(ngModel)]="newGoal.startDate" name="startDate" type="date" />
         </div>
 
         <div class="form-group">
-          <label for="end_date">Data de Conclusão</label>
-          <input id="end_date" [(ngModel)]="newGoal.end_date" name="end_date" type="date" />
+          <label for="endDate">Data de Conclusão</label>
+          <input id="endDate" [(ngModel)]="newGoal.endDate" name="endDate" type="date" />
         </div>
       </div>
 
@@ -48,24 +48,24 @@
     <div class="goals-grid" *ngIf="goals.length > 0">
       <div class="goal-card" [ngClass]="g.type" *ngFor="let g of goals">
         <span class="goal-type-badge" [ngClass]="g.type">
-          {{ g.type === 'weekly' ? '📅 Semanal' : g.type === 'monthly' ? '📆 Mensal' : '📊 Anual' }}
+          {{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}
         </span>
         
         <div class="goal-description">{{ g.description }}</div>
         
-        <div class="goal-dates" *ngIf="g.start_date || g.end_date">
-          <div class="goal-date-item" *ngIf="g.start_date">
+        <div class="goal-dates" *ngIf="g.startDate || g.endDate">
+          <div class="goal-date-item" *ngIf="g.startDate">
             <span class="goal-date-label">Início</span>
-            <span class="goal-date-value">{{ g.start_date | date:'dd/MM/yyyy' }}</span>
+            <span class="goal-date-value">{{ g.startDate | date:'dd/MM/yyyy' }}</span>
           </div>
-          <div class="goal-date-item" *ngIf="g.end_date">
+          <div class="goal-date-item" *ngIf="g.endDate">
             <span class="goal-date-label">Conclusão</span>
-            <span class="goal-date-value">{{ g.end_date | date:'dd/MM/yyyy' }}</span>
+            <span class="goal-date-value">{{ g.endDate | date:'dd/MM/yyyy' }}</span>
           </div>
         </div>
 
         <div class="goal-icon">
-          {{ g.type === 'weekly' ? '📅' : g.type === 'monthly' ? '📆' : '📊' }}
+          {{ g.type === 'WEEKLY' ? '📅' : g.type === 'MONTHLY' ? '📆' : '📊' }}
         </div>
       </div>
     </div>

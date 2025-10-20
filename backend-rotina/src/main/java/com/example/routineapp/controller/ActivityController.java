@@ -22,12 +22,6 @@ public class ActivityController {
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody Activity activity) {
-        if (activity.getTitle() == null || activity.getDate() == null || activity.getTime() == null) {
-            return ResponseEntity.badRequest().body("Título, data e hora são obrigatórios.");
-        }
-        repository.save(activity);
-        return ResponseEntity.status(201).body("Atividade criada.");
     public ResponseEntity<Activity> create(@RequestBody Activity activity) {
         if (activity.getTitle() == null || activity.getDate() == null || activity.getTime() == null) {
             return ResponseEntity.badRequest().build();

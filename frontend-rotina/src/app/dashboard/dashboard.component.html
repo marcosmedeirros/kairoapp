@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
     <h1>Dashboard</h1>
-    <p class="welcome-message">Bem-vindo ao Kairo! Aqui está seu resumo de hoje.</p>
+    <p class="welcome-message">Bem-vindo ao Gagnar! Aqui está seu resumo de hoje.</p>
   </div>
 
   <!-- Cards de Estatísticas -->
@@ -52,29 +52,6 @@
 
   <!-- Grid Principal -->
   <div class="main-grid">
-    <!-- Calorias -->
-    <div class="card calories-card">
-      <div class="card-header">
-        <h3>🍽️ Calorias Hoje</h3>
-      </div>
-      <div class="card-content">
-        <div class="calories-summary">
-          <div class="calories-main">
-            <span class="calories-number">{{ stats.caloriesConsumed }}</span>
-            <span class="calories-goal">/ {{ stats.caloriesGoal }} kcal</span>
-          </div>
-          <div class="calories-remaining">
-            <span [class.over-limit]="getCaloriesRemaining() < 0">
-              {{ getCaloriesRemaining() > 0 ? 'Restam ' + getCaloriesRemaining() : 'Limite ultrapassado em ' + Math.abs(getCaloriesRemaining()) }} kcal
-            </span>
-          </div>
-        </div>
-        <div class="calories-progress">
-          <div class="calories-bar" [style.width.%]="getCaloriesPercentage()"></div>
-        </div>
-      </div>
-    </div>
-
     <!-- Atividades Recentes -->
     <div class="card activities-card">
       <div class="card-header">
@@ -90,7 +67,6 @@
               <div class="activity-info">
                 <span class="activity-time">{{ activity.time }}</span>
                 <span class="activity-meta" *ngIf="activity.duration">{{ activity.duration }}</span>
-                <span class="activity-meta" *ngIf="activity.calories">{{ activity.calories }} kcal</span>
               </div>
             </div>
           </div>

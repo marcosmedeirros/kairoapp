@@ -10,9 +10,9 @@ export class GoalsComponent implements OnInit {
   goals: any[] = [];
   newGoal = {
     description: '',
-    type: 'weekly',
-    start_date: '',
-    end_date: ''
+    type: 'WEEKLY',
+    startDate: '',
+    endDate: ''
   };
 
   constructor(private http: HttpClient) {}
@@ -28,9 +28,17 @@ export class GoalsComponent implements OnInit {
   }
 
   addGoal() {
-    this.http.post('/api/goals', this.newGoal).subscribe(() => {
-      this.newGoal = { description: '', type: 'weekly', start_date: '', end_date: '' };
+    // prepare payload: ensure empty strings converted to null to avoid parsing issues
+    const payload: any = { ...this.newGoal };
+    if (!payload.startDate) delete payload.startDate;
+    if (!payload.endDate) delete payload.endDate;
+
+    this.http.post('/api/goals', payload).subscribe(() => {
+      this.newGoal = { description: '', type: 'WEEKLY', startDate: '', endDate: '' };
       this.fetchGoals();
+    }, (err) => {
+      console.error('Failed to create goal', err);
+      // optionally display an error to the user
     });
   }
 }
