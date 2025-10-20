@@ -16,17 +16,17 @@ export class DashboardComponent implements OnInit {
   stats = {
     totalActivities: 0,
     todayActivities: 0,
-    activeGoals: 0,
-    completedGoals: 0,
-    weekProgress: 0,
     workoutsThisWeek: 0
   };
 
-  // Atividades recentes
-  recentActivities: any[] = [];
+  // Calendário semanal (array de dias com itens agrupados)
+  weekCalendar: { date: Date, label: string, items: any[] }[] = [];
 
-  // Metas próximas do prazo
-  upcomingGoals: any[] = [];
+  // Atividade do dia (preferência: activity -> training -> diet)
+  activityOfDay: any | null = null;
+
+  // Today's key for template comparisons (YYYY-MM-DD)
+  todayKey: string = '';
 
   loading = false;
   errorMessage = '';
@@ -48,18 +48,16 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    // Fetch activities, diet logs, training notes and goals concurrently
+    // Fetch activities, diet logs and training notes concurrently
     forkJoin({
       activities: this.safeGet('/api/activities'),
       diet: this.safeGet('/api/diet'),
-      training: this.safeGet('/api/training'),
-      goals: this.safeGet('/api/goals')
+      training: this.safeGet('/api/training')
     }).subscribe({
       next: (res) => {
         const activities = res.activities || [];
         const diet = res.diet || [];
         const training = res.training || [];
-        const goals = res.goals || [];
 
         // Stats derived from activities
         this.stats.totalActivities = activities.length;
@@ -75,58 +73,26 @@ export class DashboardComponent implements OnInit {
           return d && d >= weekAgo;
         }).length;
 
-        // Goals
-        this.stats.activeGoals = goals.filter((g: any) => !g.completed).length;
-        this.stats.completedGoals = goals.filter((g: any) => g.completed).length;
+        // Build the weekly calendar (Monday -> Sunday)
+        this.weekCalendar = this.buildWeekCalendar(activities, training, diet);
 
-        // weekProgress: average elapsed time percent for active goals that have start/end dates
-        const activeWithDates = goals.filter((g: any) => !g.completed && g.startDate && g.endDate);
-        const progressValues = activeWithDates.map((g: any) => this.computeGoalTimeProgress(g));
-        this.stats.weekProgress = progressValues.length ? Math.round(progressValues.reduce((s: number, v: number) => s + v, 0) / progressValues.length) : 0;
+        // Compute today's key once for template comparisons
+        this.todayKey = this.formatDateKey(new Date());
 
-        // Build recentActivities: combine activities, training, diet (take latest items)
-        const mappedActivities = activities.map((a: any) => ({
-          name: a.title || 'Atividade',
-          time: a.time || (a.date ? a.date : ''),
-          date: a.date || null,
-          type: 'calendar',
-          meta: a.description || ''
-        }));
-
-        const mappedTraining = training.map((t: any) => ({
-          name: 'Treino',
-          time: t.date || '',
-          date: t.date || null,
-          type: 'training',
-          meta: t.note || ''
-        }));
-
-        const mappedDiet = diet.map((d: any) => ({
-          name: 'Diário Alimentar',
-          time: d.date || '',
-          date: d.date || null,
-          type: 'diet',
-          meta: (d.breakfast || d.lunch || d.dinner || d.snacks || '').substring(0, 120)
-        }));
-
-        const combined = [...mappedActivities, ...mappedTraining, ...mappedDiet];
-
-        // normalize date/time and sort desc
-        const withDates = combined.map((c: any) => {
-          const dt = this.combineDateTime(c.date, c.time);
-          return { ...c, _ts: dt ? dt.getTime() : 0 };
-        });
-
-        withDates.sort((a: any, b: any) => b._ts - a._ts);
-        this.recentActivities = withDates.slice(0, 6);
-
-        // upcomingGoals: pick goals ordered by endDate ascending
-        const goalsWithDeadlines = goals.map((g: any) => ({ ...g, _end: this.parseDate(g.endDate || g.end_date || g.end) })).filter((g: any) => g._end).sort((a: any, b: any) => a._end.getTime() - b._end.getTime());
-        this.upcomingGoals = goalsWithDeadlines.slice(0, 5).map((g: any) => ({
-          name: g.description || g.desc || 'Meta',
-          deadline: g._end,
-          progress: this.computeGoalTimeProgress(g)
-        }));
+        // Determine activity of the day (prioritize activities, then training, then diet)
+        const todayKey = this.todayKey;
+        const todaysActivities = activities.filter(a => this.formatDateKey(a.date || a.localDate || a.dateTime || '') === todayKey);
+        const todaysTraining = training.filter(t => this.formatDateKey(t.date) === todayKey);
+        const todaysDiet = diet.filter(d => this.formatDateKey(d.date) === todayKey);
+        if (todaysActivities.length) {
+          this.activityOfDay = { type: 'calendar', item: todaysActivities[0] };
+        } else if (todaysTraining.length) {
+          this.activityOfDay = { type: 'training', item: todaysTraining[0] };
+        } else if (todaysDiet.length) {
+          this.activityOfDay = { type: 'diet', item: todaysDiet[0] };
+        } else {
+          this.activityOfDay = null;
+        }
 
         this.loading = false;
       },
@@ -138,15 +104,51 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private computeGoalTimeProgress(g: any): number {
-    const start = this.parseDate(g.startDate || g.start_date || g.start);
-    const end = this.parseDate(g.endDate || g.end_date || g.end);
-    if (!start || !end) return 0;
+  private buildWeekCalendar(activities: any[], training: any[], diet: any[]) {
+    // returns array for current week Monday..Sunday
+    const result: { date: Date, label: string, items: any[] }[] = [];
     const now = new Date();
-    const total = end.getTime() - start.getTime();
-    if (total <= 0) return 0;
-    const elapsed = Math.max(0, Math.min(now.getTime() - start.getTime(), total));
-    return Math.round((elapsed / total) * 100);
+    // get monday of current week
+    const day = now.getDay(); // 0 Sun .. 6 Sat
+    const diffToMonday = ((day + 6) % 7); // 0=>Mon, 6=>Sun
+    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diffToMonday);
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+      const key = this.formatDateKey(d);
+      // Use pt-BR locale for day labels (e.g. 'seg, 20')
+      const dayLabel = d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' });
+
+      // collect items whose date matches key
+      const items: any[] = [];
+
+      activities.forEach((a: any) => {
+        if (this.formatDateKey(a.date || a.localDate || a.dateTime || '') === key) {
+          items.push({ type: 'activity', source: a, name: a.title || 'Atividade', time: a.time || '' });
+        }
+      });
+      training.forEach((t: any) => {
+        if (this.formatDateKey(t.date) === key) {
+          items.push({ type: 'training', source: t, name: 'Treino', time: t.date || '' });
+        }
+      });
+      diet.forEach((di: any) => {
+        if (this.formatDateKey(di.date) === key) {
+          items.push({ type: 'diet', source: di, name: 'Alimentação', time: di.date || '' });
+        }
+      });
+
+      // sort items by time if available
+      items.sort((a, b) => {
+        const ta = this.combineDateTime(a.source.date, a.source.time) || new Date(0);
+        const tb = this.combineDateTime(b.source.date, b.source.time) || new Date(0);
+        return ta.getTime() - tb.getTime();
+      });
+
+      result.push({ date: d, label: dayLabel, items });
+    }
+
+    return result;
   }
 
   // Format a date-like input into YYYY-MM-DD for equality checks
@@ -215,5 +217,19 @@ export class DashboardComponent implements OnInit {
     if (progress >= 75) return '#4caf50';
     if (progress >= 50) return '#ff9800';
     return '#f44336';
+  }
+
+  // Helper for template: count items on a week day
+  itemsCountForDay(idx: number): number {
+    if (!this.weekCalendar || !this.weekCalendar[idx]) return 0;
+    return this.weekCalendar[idx].items.length;
+  }
+
+  // Helper: navigate or open item (for now we'll route to generic pages by type)
+  openItem(item: any) {
+    // This method is a placeholder. Ideally we would route to specific edit/view pages.
+    if (!item) return;
+    // For the dashboard we simply log for now — the template can link to pages instead.
+    console.log('Open item', item);
   }
 }
