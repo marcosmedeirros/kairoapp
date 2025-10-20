@@ -1,0 +1,66 @@
+<div class="calendar-container">
+  <div class="page-header">
+    <h2>📅 Agenda de Atividades</h2>
+    <p class="page-subtitle">Organize suas atividades diárias e mantenha-se no controle</p>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-card">
+    <h3>➕ Nova Atividade</h3>
+    <form (ngSubmit)="addActivity()" class="activity-form">
+      <div class="form-group">
+        <label for="title">Título *</label>
+        <input id="title" [(ngModel)]="newActivity.title" name="title" placeholder="Ex: Reunião de equipe" required />
+      </div>
+
+      <div class="form-group">
+        <label for="date">Data *</label>
+        <input id="date" [(ngModel)]="newActivity.date" name="date" type="date" required />
+      </div>
+
+      <div class="form-group">
+        <label for="time">Horário *</label>
+        <input id="time" [(ngModel)]="newActivity.time" name="time" type="time" required />
+      </div>
+
+      <div class="form-group full-width">
+        <label for="description">Descrição</label>
+        <textarea id="description" [(ngModel)]="newActivity.description" name="description" placeholder="Descreva os detalhes da atividade..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn-submit">Adicionar Atividade</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Activities List -->
+  <div class="activities-section">
+    <h3>
+      Atividades Agendadas
+      <span class="activity-count">{{ activities.length }}</span>
+    </h3>
+
+    <div class="activities-grid" *ngIf="activities.length > 0">
+      <div class="activity-card" *ngFor="let activity of activities">
+        <div class="activity-header">
+          <div>
+            <div class="activity-title">{{ activity.title }}</div>
+            <div class="activity-datetime">
+              <span class="activity-date">{{ activity.date | date:'dd/MM/yyyy' }}</span>
+              <span class="activity-time">{{ activity.time }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="activity-description" *ngIf="activity.description">
+          {{ activity.description }}
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="activities.length === 0">
+      <div class="empty-state-icon">📋</div>
+      <p>Nenhuma atividade agendada ainda. Adicione sua primeira atividade acima!</p>
+    </div>
+  </div>
+</div>

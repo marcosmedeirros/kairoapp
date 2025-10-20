@@ -1,0 +1,117 @@
+<div class="diet-container">
+  <div class="page-header">
+    <h2>🍽️ Diário Alimentar</h2>
+    <p class="page-subtitle">Registre suas refeições e mantenha uma alimentação saudável</p>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-card">
+    <h3>➕ Novo Registro de Alimentação</h3>
+    <form (ngSubmit)="addLog()" class="diet-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">📅 Data *</label>
+          <input id="date" [(ngModel)]="newLog.date" name="date" type="date" required />
+        </div>
+      </div>
+
+      <div class="meals-section">
+        <h4>🍴 Refeições do Dia</h4>
+        <div class="meals-grid">
+          <div class="form-group">
+            <label for="breakfast">
+              <span class="meal-icon">☕</span>
+              Café da Manhã
+            </label>
+            <textarea id="breakfast" [(ngModel)]="newLog.breakfast" name="breakfast" placeholder="Ex: Pão integral, ovo..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="lunch">
+              <span class="meal-icon">🍚</span>
+              Almoço
+            </label>
+            <textarea id="lunch" [(ngModel)]="newLog.lunch" name="lunch" placeholder="Ex: Arroz, feijão, frango..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dinner">
+              <span class="meal-icon">🥗</span>
+              Jantar
+            </label>
+            <textarea id="dinner" [(ngModel)]="newLog.dinner" name="dinner" placeholder="Ex: Salada, peixe..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="snacks">
+              <span class="meal-icon">🍎</span>
+              Lanches
+            </label>
+            <textarea id="snacks" [(ngModel)]="newLog.snacks" name="snacks" placeholder="Ex: Frutas, iogurte..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="notes">📝 Observações</label>
+          <textarea id="notes" [(ngModel)]="newLog.notes" name="notes" placeholder="Anotações adicionais sobre sua alimentação..."></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">💾 Registrar Alimentação</button>
+    </form>
+  </div>
+
+  <!-- Logs Section -->
+  <div class="logs-section">
+    <h3>
+      Histórico de Alimentação
+      <span class="log-count">{{ logs.length }}</span>
+    </h3>
+
+    <div class="logs-grid" *ngIf="logs.length > 0">
+      <div class="log-card" *ngFor="let log of logs">
+        <div class="log-header">
+          <div class="log-date">{{ log.date | date:'dd/MM/yyyy' }}</div>
+        </div>
+
+        <div class="meals-list">
+          <div class="meal-item" *ngIf="log.breakfast">
+            <div class="meal-label">☕ Café da Manhã</div>
+            <div class="meal-content">{{ log.breakfast }}</div>
+          </div>
+
+          <div class="meal-item" *ngIf="log.lunch">
+            <div class="meal-label">🍚 Almoço</div>
+            <div class="meal-content">{{ log.lunch }}</div>
+          </div>
+
+          <div class="meal-item" *ngIf="log.dinner">
+            <div class="meal-label">🥗 Jantar</div>
+            <div class="meal-content">{{ log.dinner }}</div>
+          </div>
+
+          <div class="meal-item" *ngIf="log.snacks">
+            <div class="meal-label">🍎 Lanches</div>
+            <div class="meal-content">{{ log.snacks }}</div>
+          </div>
+
+          <div class="meal-item" *ngIf="!log.breakfast && !log.lunch && !log.dinner && !log.snacks">
+            <div class="meal-content meal-empty">Nenhuma refeição registrada</div>
+          </div>
+        </div>
+
+        <div class="notes-section" *ngIf="log.notes">
+          <div class="notes-label">📝 Observações</div>
+          <div class="notes-content">{{ log.notes }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="logs.length === 0">
+      <div class="empty-state-icon">🍽️</div>
+      <p>Nenhum registro de alimentação ainda. Comece registrando suas refeições acima!</p>
+    </div>
+  </div>
+</div>

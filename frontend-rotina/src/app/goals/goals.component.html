@@ -1,0 +1,78 @@
+<div class="goals-container">
+  <div class="page-header">
+    <h2>🎯 Metas e Objetivos</h2>
+    <p class="page-subtitle">Defina e acompanhe suas metas de desenvolvimento</p>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-card">
+    <h3>➕ Nova Meta</h3>
+    <form (ngSubmit)="addGoal()" class="goals-form">
+      <div class="form-group full-width">
+        <label for="description">Descrição da Meta *</label>
+        <textarea id="description" [(ngModel)]="newGoal.description" name="description" placeholder="Ex: Correr 5km em menos de 30 minutos" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="type">Tipo de Meta *</label>
+          <select id="type" [(ngModel)]="newGoal.type" name="type" required>
+            <option value="weekly">📅 Semanal</option>
+            <option value="monthly">📆 Mensal</option>
+            <option value="yearly">📊 Anual</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="start_date">Data de Início</label>
+          <input id="start_date" [(ngModel)]="newGoal.start_date" name="start_date" type="date" />
+        </div>
+
+        <div class="form-group">
+          <label for="end_date">Data de Conclusão</label>
+          <input id="end_date" [(ngModel)]="newGoal.end_date" name="end_date" type="date" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">🎯 Adicionar Meta</button>
+    </form>
+  </div>
+
+  <!-- Goals Section -->
+  <div class="goals-section">
+    <h3>
+      Suas Metas
+      <span class="goal-count">{{ goals.length }}</span>
+    </h3>
+
+    <div class="goals-grid" *ngIf="goals.length > 0">
+      <div class="goal-card" [ngClass]="g.type" *ngFor="let g of goals">
+        <span class="goal-type-badge" [ngClass]="g.type">
+          {{ g.type === 'weekly' ? '📅 Semanal' : g.type === 'monthly' ? '📆 Mensal' : '📊 Anual' }}
+        </span>
+        
+        <div class="goal-description">{{ g.description }}</div>
+        
+        <div class="goal-dates" *ngIf="g.start_date || g.end_date">
+          <div class="goal-date-item" *ngIf="g.start_date">
+            <span class="goal-date-label">Início</span>
+            <span class="goal-date-value">{{ g.start_date | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="goal-date-item" *ngIf="g.end_date">
+            <span class="goal-date-label">Conclusão</span>
+            <span class="goal-date-value">{{ g.end_date | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="goal-icon">
+          {{ g.type === 'weekly' ? '📅' : g.type === 'monthly' ? '📆' : '📊' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="goals.length === 0">
+      <div class="empty-state-icon">🎯</div>
+      <p>Nenhuma meta definida ainda. Crie sua primeira meta acima!</p>
+    </div>
+  </div>
+</div>
