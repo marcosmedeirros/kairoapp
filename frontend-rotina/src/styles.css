@@ -1,3 +1,6 @@
+/* Import Montserrat from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
 /* Reset e estilos globais */
 * {
   margin: 0;
@@ -6,11 +9,11 @@
 }
 
 :root {
-  /* Brand tokens */
-  --color-bg: #F5F7FA; /* principal */
-  --color-accent: #4C6FA3; /* botão / destaque */
-  --color-secondary-text: #A7B4C3; /* texto secundário */
-  --color-text: #2c3e50;
+  /* Brand tokens (updated to request) */
+  --color-bg: #F5F7FA; /* page background (kept light) */
+  --color-accent: #000000; /* primary (strong) */
+  --color-secondary-text: #515151; /* secondary (stronger) */
+  --color-text: #151515; /* darker default text for stronger contrast */
   --brand-font: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --radius-sm: 6px;
 }
@@ -28,22 +31,79 @@ html, body {
   margin: 0;
 }
 
+/* Sidebar / menu (black background, white text only for menu) */
+.sidebar {
+  background: #000000;
+  color: #ffffff;
+  width: 220px;
+  min-height: 100vh;
+  padding: 1.25rem;
+  position: fixed;
+  left: 0;
+  top: 0;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.12);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar brand */
+.sidebar .sidebar-brand .brand {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* Nav links in sidebar */
+.sidebar .sidebar-nav {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar .sidebar-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.sidebar .sidebar-nav a:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.sidebar .sidebar-nav a.active {
+  background: rgba(255,255,255,0.08);
+}
+
+.sidebar .sidebar-footer {
+  margin-top: auto;
+}
+
+/* Push main content to the right so menu does not overlap */
+.main-content {
+  margin-left: 240px; /* allow some gap */
+  transition: margin-left 0.12s ease;
+}
+
 .btn-primary {
   display: inline-block;
   background-color: var(--color-accent);
-  color: #fff;
+  color: #ffffff;
   padding: 0.6rem 1rem;
   border-radius: var(--radius-sm);
   border: none;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
   transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(76, 111, 163, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
 
 .btn-ghost {
@@ -142,3 +202,11 @@ html, body {
   font-family: var(--brand-font), sans-serif;
 }
 .edit-input:focus { outline: 2px solid rgba(76,111,163,0.12); box-shadow: 0 6px 18px rgba(76,111,163,0.06); }
+
+/* Make secondary text use the stronger secondary color */
+.small-secondary, .muted {
+  color: var(--color-secondary-text);
+}
+
+/* Keep the rest of the existing rules intact below */
+
