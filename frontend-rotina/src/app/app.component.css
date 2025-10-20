@@ -3,7 +3,6 @@ nav {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
-<<<<<<< HEAD
   padding: 0.25rem 0;
   align-items: center;
 }
@@ -20,7 +19,6 @@ nav a {
 nav a:hover {
   background-color: rgba(76, 111, 163, 0.08);
   color: var(--color-accent);
-=======
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 1rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -37,17 +35,13 @@ nav a {
 
 nav a:hover {
   background-color: rgba(255, 255, 255, 0.2);
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
   transform: translateY(-2px);
 }
 
 nav a.active {
-<<<<<<< HEAD
   background-color: rgba(76, 111, 163, 0.12);
   color: var(--color-accent);
-=======
   background-color: rgba(255, 255, 255, 0.3);
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
   font-weight: 700;
 }
 
@@ -55,17 +49,14 @@ nav a.active {
 :host {
   display: block;
   min-height: 100vh;
-<<<<<<< HEAD
   background-color: var(--color-bg);
 }
 
-/* Small responsive adjustments */
+
 @media (max-width: 700px) {
   nav {
     gap: 0.5rem;
     overflow-x: auto;
   }
-=======
   background-color: #f5f7fa;
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
 }

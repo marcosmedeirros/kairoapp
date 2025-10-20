@@ -4,11 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-training',
   templateUrl: './training.component.html',
-<<<<<<< HEAD
-  styleUrls: []
-=======
   styleUrls: ['./training.component.css']
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
 })
 export class TrainingComponent implements OnInit {
   notes: any[] = [];
@@ -35,8 +31,6 @@ export class TrainingComponent implements OnInit {
       this.fetchNotes();
     });
   }
-<<<<<<< HEAD
-=======
 
   getThisWeekCount(): number {
     const now = new Date();
@@ -49,5 +43,4 @@ export class TrainingComponent implements OnInit {
     const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     return this.notes.filter(n => new Date(n.date) >= monthAgo).length;
   }
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
 }
