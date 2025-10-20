@@ -5,13 +5,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { DietComponent } from './diet/diet.component';
 import { TrainingComponent } from './training/training.component';
 import { GoalsComponent } from './goals/goals.component';
 
 const routes: Routes = [
-  { path: '', component: CalendarComponent },
+  { path: '', component: DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'calendar', component: CalendarComponent },
   { path: 'diet', component: DietComponent },
   { path: 'training', component: TrainingComponent },
   { path: 'goals', component: GoalsComponent }
@@ -20,6 +23,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    DashboardComponent,
     CalendarComponent,
     DietComponent,
     TrainingComponent,

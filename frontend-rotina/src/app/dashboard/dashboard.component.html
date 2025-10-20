@@ -1,0 +1,154 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p class="welcome-message">Bem-vindo ao Kairo! Aqui está seu resumo de hoje.</p>
+  </div>
+
+  <!-- Cards de Estatísticas -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <h3>{{ stats.todayActivities }}</h3>
+        <p>Atividades Hoje</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-content">
+        <h3>{{ stats.activeGoals }}</h3>
+        <p>Metas Ativas</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <h3>{{ stats.completedGoals }}</h3>
+        <p>Metas Concluídas</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">💪</div>
+      <div class="stat-content">
+        <h3>{{ stats.workoutsThisWeek }}</h3>
+        <p>Treinos esta Semana</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progresso Semanal -->
+  <div class="progress-section">
+    <div class="section-header">
+      <h2>Progresso Semanal</h2>
+      <span class="progress-percentage">{{ stats.weekProgress }}%</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="stats.weekProgress"></div>
+    </div>
+  </div>
+
+  <!-- Grid Principal -->
+  <div class="main-grid">
+    <!-- Calorias -->
+    <div class="card calories-card">
+      <div class="card-header">
+        <h3>🍽️ Calorias Hoje</h3>
+      </div>
+      <div class="card-content">
+        <div class="calories-summary">
+          <div class="calories-main">
+            <span class="calories-number">{{ stats.caloriesConsumed }}</span>
+            <span class="calories-goal">/ {{ stats.caloriesGoal }} kcal</span>
+          </div>
+          <div class="calories-remaining">
+            <span [class.over-limit]="getCaloriesRemaining() < 0">
+              {{ getCaloriesRemaining() > 0 ? 'Restam ' + getCaloriesRemaining() : 'Limite ultrapassado em ' + Math.abs(getCaloriesRemaining()) }} kcal
+            </span>
+          </div>
+        </div>
+        <div class="calories-progress">
+          <div class="calories-bar" [style.width.%]="getCaloriesPercentage()"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atividades Recentes -->
+    <div class="card activities-card">
+      <div class="card-header">
+        <h3>📋 Atividades Recentes</h3>
+        <a routerLink="/calendar" class="view-all">Ver todas</a>
+      </div>
+      <div class="card-content">
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-icon">{{ getActivityIcon(activity.type) }}</div>
+            <div class="activity-details">
+              <div class="activity-name">{{ activity.name }}</div>
+              <div class="activity-info">
+                <span class="activity-time">{{ activity.time }}</span>
+                <span class="activity-meta" *ngIf="activity.duration">{{ activity.duration }}</span>
+                <span class="activity-meta" *ngIf="activity.calories">{{ activity.calories }} kcal</span>
+              </div>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="recentActivities.length === 0">
+            <p>Nenhuma atividade registrada hoje</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metas em Destaque -->
+    <div class="card goals-card">
+      <div class="card-header">
+        <h3>🎯 Metas em Andamento</h3>
+        <a routerLink="/goals" class="view-all">Ver todas</a>
+      </div>
+      <div class="card-content">
+        <div class="goals-list">
+          <div class="goal-item" *ngFor="let goal of upcomingGoals">
+            <div class="goal-header">
+              <span class="goal-name">{{ goal.name }}</span>
+              <span class="goal-progress">{{ goal.progress }}%</span>
+            </div>
+            <div class="goal-progress-bar">
+              <div class="goal-bar" 
+                   [style.width.%]="goal.progress"
+                   [style.background-color]="getProgressColor(goal.progress)"></div>
+            </div>
+            <div class="goal-deadline">Prazo: {{ goal.deadline | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <div class="empty-state" *ngIf="upcomingGoals.length === 0">
+            <p>Nenhuma meta definida</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ações Rápidas -->
+  <div class="quick-actions">
+    <h2>Ações Rápidas</h2>
+    <div class="actions-grid">
+      <button class="action-btn" routerLink="/diet">
+        <span class="action-icon">🍽️</span>
+        <span>Registrar Refeição</span>
+      </button>
+      <button class="action-btn" routerLink="/training">
+        <span class="action-icon">💪</span>
+        <span>Novo Treino</span>
+      </button>
+      <button class="action-btn" routerLink="/goals">
+        <span class="action-icon">🎯</span>
+        <span>Criar Meta</span>
+      </button>
+      <button class="action-btn" routerLink="/calendar">
+        <span class="action-icon">📅</span>
+        <span>Ver Calendário</span>
+      </button>
+    </div>
+  </div>
+</div>
