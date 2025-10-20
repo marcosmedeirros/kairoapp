@@ -29,6 +29,12 @@ export class DietComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchLogs();
+    // Prefill new log date with today
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    this.newLog.date = `${y}-${m}-${day}`;
   }
 
   fetchLogs() {

@@ -18,4 +18,5 @@
 .log-date { font-weight:700; color:var(--color-accent); }
 .meal-label { font-weight:600; color:var(--color-text); }
 .meal-content { color:var(--color-secondary-text); }
+.meals-list .meal-item { margin-bottom:0.5rem; }
 .empty-state { text-align:center; padding:2rem; background:#fff; border:1px dashed rgba(44,62,80,0.04); border-radius:10px; color:var(--color-secondary-text); }
