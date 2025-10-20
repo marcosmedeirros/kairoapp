@@ -4,7 +4,11 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-goals',
   templateUrl: './goals.component.html',
+<<<<<<< HEAD
   styleUrls: []
+=======
+  styleUrls: ['./goals.component.css']
+>>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
 })
 export class GoalsComponent implements OnInit {
   goals: any[] = [];

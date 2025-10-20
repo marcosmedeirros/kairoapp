@@ -50,6 +50,12 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+<<<<<<< HEAD
+=======
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
+>>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
           "configurations": {
             "production": {
               "buildTarget": "routine-app-frontend:build:production"

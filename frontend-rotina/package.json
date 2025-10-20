@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+<<<<<<< HEAD
     "start": "ng serve"
+=======
+    "start": "ng serve --proxy-config proxy.conf.json"
+>>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
   },
   "dependencies": {
     "@angular/animations": "^17.3.0",

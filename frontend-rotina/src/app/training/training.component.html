@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <h2>Treinos</h2>
 <form (ngSubmit)="addNote()" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
   <input [(ngModel)]="newNote.date" name="date" type="date" required />
@@ -9,3 +10,75 @@
     {{ n.date }} – {{ n.note }}
   </li>
 </ul>
+=======
+<div class="training-container">
+  <div class="page-header">
+    <h2>💪 Diário de Treinos</h2>
+    <p class="page-subtitle">Registre seus treinos e acompanhe sua evolução</p>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" *ngIf="notes.length > 0">
+    <div class="stat-card">
+      <div class="stat-value">{{ notes.length }}</div>
+      <div class="stat-label">Treinos Registrados</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ getThisWeekCount() }}</div>
+      <div class="stat-label">Treinos esta Semana</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ getThisMonthCount() }}</div>
+      <div class="stat-label">Treinos este Mês</div>
+    </div>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-card">
+    <h3>➕ Novo Registro de Treino</h3>
+    <form (ngSubmit)="addNote()" class="training-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">📅 Data do Treino *</label>
+          <input id="date" [(ngModel)]="newNote.date" name="date" type="date" required />
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="note">📝 Descrição do Treino *</label>
+        <textarea 
+          id="note" 
+          [(ngModel)]="newNote.note" 
+          name="note" 
+          placeholder="Descreva seu treino em detalhes...&#10;&#10;Exemplo:&#10;• Aquecimento: 10 min na esteira&#10;• Supino reto: 4x12 (60kg)&#10;• Leg press: 3x15 (100kg)&#10;• Abdominais: 3x20&#10;&#10;Observações: Ótimo treino! Aumentei a carga do supino."
+          required></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">💪 Registrar Treino</button>
+    </form>
+  </div>
+
+  <!-- Notes Section -->
+  <div class="notes-section">
+    <h3>
+      Histórico de Treinos
+      <span class="note-count">{{ notes.length }}</span>
+    </h3>
+
+    <div class="notes-grid" *ngIf="notes.length > 0">
+      <div class="note-card" *ngFor="let n of notes">
+        <div class="note-header">
+          <div class="note-date">{{ n.date | date:'dd/MM/yyyy' }}</div>
+          <div class="workout-icon">💪</div>
+        </div>
+        <div class="note-content">{{ n.note }}</div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="notes.length === 0">
+      <div class="empty-state-icon">💪</div>
+      <p>Nenhum treino registrado ainda. Comece registrando seu primeiro treino acima!</p>
+    </div>
+  </div>
+</div>
+>>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12

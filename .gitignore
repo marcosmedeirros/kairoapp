@@ -1,0 +1,19 @@
+# === BACKEND (Spring Boot / Maven) ===
+target/
+*.log
+*.class
+*.jar
+*.war
+*.iml
+/.idea
+
+# === FRONTEND (Angular) ===
+node_modules/
+dist/
+.angular/
+*.env
+
+# === SISTEMA / EDITOR ===
+.vscode/
+.DS_Store
+Thumbs.db
