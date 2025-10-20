@@ -10,3 +10,11 @@
 .btn-ghost { background:transparent; border:1px solid #ddd; padding:0.4rem 0.6rem; border-radius:6px; cursor:pointer; }
 .count { font-size:0.9rem; color:#666; margin-left:0.5rem; }
 
+/* Combine date and time in a single row */
+.card-meta.combined-datetime { color:#666; font-size:0.9rem; margin-top:0.35rem; }
+.card-meta.combined-datetime div { display:flex; gap:0.5rem; align-items:center; }
+
+/* Calendar embed section under activities */
+.activity-calendar { margin-top:1rem; background:#fff; padding:1rem; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
+.activity-calendar h4 { margin:0 0 0.5rem 0; }
+

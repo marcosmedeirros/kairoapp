@@ -13,14 +13,15 @@
         <input id="title" [(ngModel)]="newActivity.title" name="title" placeholder="Ex: Reunião de equipe" required />
       </div>
 
-      <div class="form-group">
-        <label for="date">Data *</label>
-        <input id="date" [(ngModel)]="newActivity.date" name="date" type="date" required />
-      </div>
-
-      <div class="form-group">
-        <label for="time">Horário *</label>
-        <input id="time" [(ngModel)]="newActivity.time" name="time" type="time" required />
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Data *</label>
+          <input id="date" [(ngModel)]="newActivity.date" name="date" type="date" required />
+        </div>
+        <div class="form-group">
+          <label for="time">Horário *</label>
+          <input id="time" [(ngModel)]="newActivity.time" name="time" type="time" required />
+        </div>
       </div>
 
       <div class="form-group full-width">
@@ -96,6 +97,49 @@
     <div class="empty-state" *ngIf="activities.length === 0">
       <div class="empty-state-icon">📋</div>
       <p>Nenhuma atividade agendada ainda. Adicione sua primeira atividade acima!</p>
+    </div>
+  </div>
+  <!-- Put activities and calendar in two columns so calendar doesn't get pushed down -->
+  <div class="main-columns">
+
+    <!-- Simple month calendar -->
+    <div class="month-calendar">
+    <div class="calendar-header">
+      <button class="nav-btn" (click)="prevMonth()">◀</button>
+      <div class="month-title">{{ monthNames[currentMonth] }} {{ currentYear }}</div>
+      <button class="nav-btn" (click)="nextMonth()">▶</button>
+    </div>
+    <div class="weekday-row">
+      <div *ngFor="let wd of ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']" class="weekday">{{ wd }}</div>
+    </div>
+    <div class="weeks">
+      <div class="week" *ngFor="let week of weeks">
+        <div class="day" *ngFor="let d of week" [class.outside]="!d.inMonth" (click)="selectDay(d.dateStr)">
+          <div class="day-number">{{ d.day }}</div>
+          <div *ngIf="hasEvent(d.dateStr)" class="event-dot" title="Evento"></div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </div>
+
+  <!-- Day details modal -->
+  <div class="modal-backdrop" *ngIf="showDayModal" (click)="closeDayModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Eventos em {{ selectedDate }}</h3>
+      <div *ngIf="eventsForSelectedDate.length === 0">Nenhum evento neste dia.</div>
+      <div *ngFor="let ev of eventsForSelectedDate" class="event-item">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div><strong>{{ ev.title }}</strong></div>
+          <div *ngIf="ev.time">{{ ev.time }}</div>
+        </div>
+        <div *ngIf="ev.description">{{ ev.description }}</div>
+        <hr />
+      </div>
+      <div style="text-align:right; margin-top:0.5rem;">
+        <button class="btn-ghost" (click)="closeDayModal()">Fechar</button>
+      </div>
     </div>
   </div>
 

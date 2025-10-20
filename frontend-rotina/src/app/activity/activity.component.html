@@ -73,9 +73,8 @@
               <button class="icon-btn danger" (click)="openDeleteModal(a)" title="Excluir"><span class="icon">🗑️</span></button>
             </div>
           </div>
-          <div class="card-meta">
-            <div *ngIf="a.date">📅 {{ formatDateDisplay(a.date) }}</div>
-            <div *ngIf="a.time">⏰ {{ a.time }}</div>
+          <div class="card-meta combined-datetime">
+            <div *ngIf="a.date || a.time">📅 {{ a.date ? formatDateDisplay(a.date) : '' }}<span *ngIf="a.date && a.time"> — </span><span *ngIf="a.time">⏰ {{ a.time }}</span></div>
           </div>
           <div class="card-desc" *ngIf="a.description">{{ a.description }}</div>
         </ng-template>
@@ -96,5 +95,10 @@
   </div>
 </div>
 
-<!-- REMOVIDO: Activity component removido a pedido do usuário. -->
-<div style="padding:1rem; color:#666; font-style:italic;">Componente `Activity` removido.</div>
+
+  <!-- Calendar section embedded below the scheduled activities -->
+  <div class="activity-calendar">
+    <h4>Calendário</h4>
+    <!-- Reuse the Calendar component to show events -->
+    <app/calendar></app/calendar>
+  </div>
