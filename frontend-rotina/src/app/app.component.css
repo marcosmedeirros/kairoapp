@@ -1,4 +1,151 @@
-/* Navegação */
+/* Consolidated navigation/sidebar styles and responsive behavior */
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+/* Sidebar layout and responsive behavior */
+
+/* Mobile toggle button (label placed before aside in DOM) */
+.nav-toggle-button {
+  display: none;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  padding: 1.25rem;
+  background: #ffffff;
+  border-right: 1px solid rgba(44,62,80,0.04);
+  box-shadow: 2px 0 12px rgba(44,62,80,0.04);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar .brand {
+  font-weight: 700;
+  color: var(--color-accent);
+  font-size: 1.15rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.sidebar-nav a {
+  color: var(--color-secondary-text);
+  text-decoration: none;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.18s, transform 0.12s, color 0.12s;
+}
+
+.sidebar-nav a:hover {
+  background-color: rgba(76,111,163,0.06);
+  color: var(--color-accent);
+  transform: translateX(4px);
+}
+
+.sidebar-nav a.active {
+  background-color: rgba(76,111,163,0.12);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.main-content {
+  margin-left: 240px;
+  min-height: 100vh;
+  transition: margin-left 0.18s ease;
+}
+
+.topbar {
+  display: none; /* shown on small screens */
+  height: 56px;
+  align-items: center;
+  padding: 0 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--color-bg);
+}
+
+.topbar-title {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.topbar-toggle {
+  display: inline-block;
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin-right: 0.75rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 900px) {
+  .nav-toggle-button {
+    display: inline-block;
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    z-index: 60;
+    background: var(--color-accent);
+    color: #fff;
+    padding: 0.45rem 0.65rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  /* sidebar initially hidden on small screens */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    width: 220px;
+  }
+
+  /* when checkbox is checked, show sidebar */
+  #nav-toggle:checked ~ .sidebar {
+    transform: translateX(0);
+  }
+
+  /* show topbar in mobile */
+  .topbar {
+    display: flex;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  /* when sidebar open, prevent body scrolling (small helper) */
+  #nav-toggle:checked ~ .main-content {
+    position: relative;
+  }
+}
+
+/* Preserve compatibility for any remaining header nav styles */
 nav {
   display: flex;
   gap: 1rem;
@@ -19,44 +166,11 @@ nav a {
 nav a:hover {
   background-color: rgba(76, 111, 163, 0.08);
   color: var(--color-accent);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-nav a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
 nav a.active {
   background-color: rgba(76, 111, 163, 0.12);
   color: var(--color-accent);
-  background-color: rgba(255, 255, 255, 0.3);
   font-weight: 700;
-}
-
-/* Container principal */
-:host {
-  display: block;
-  min-height: 100vh;
-  background-color: var(--color-bg);
-}
-
-
-@media (max-width: 700px) {
-  nav {
-    gap: 0.5rem;
-    overflow-x: auto;
-  }
-  background-color: #f5f7fa;
 }

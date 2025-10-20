@@ -1,37 +1,34 @@
-<<<<<<< HEAD
-<header class="header">
-  <div class="container" style="display:flex; align-items:center; gap:1rem;">
+<!-- Sidebar layout with mobile toggle -->
+<input type="checkbox" id="nav-toggle" hidden />
+<label for="nav-toggle" class="nav-toggle-button" aria-hidden="true">☰</label>
+<aside class="sidebar">
+  <div class="sidebar-brand">
     <div class="brand">Gagnar</div>
-    <nav>
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/calendar" routerLinkActive="active">Agenda</a>
-      <a routerLink="/diet" routerLinkActive="active">Dietas</a>
-      <a routerLink="/training" routerLinkActive="active">Treinos</a>
-      <a routerLink="/goals" routerLinkActive="active">Metas</a>
-    </nav>
-    <div style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
-      <button class="btn-primary">Começar</button>
-    </div>
   </div>
-</header>
 
-<main class="container">
-  <section style="padding:2rem 0;">
-    <h1 style="font-weight:700; margin-bottom:0.5rem; color:var(--color-text);">Bem-vindo ao Gagnar</h1>
-    <p style="color:var(--color-secondary-text); margin-bottom:1rem;">Organize suas dietas, treinos e metas em um só lugar.</p>
-    <a class="btn-primary" href="#">Ir para Dashboard</a>
-  </section>
+  <nav class="sidebar-nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+    <a routerLink="/calendar" routerLinkActive="active">Agenda</a>
+    <a routerLink="/diet" routerLinkActive="active">Dietas</a>
+    <a routerLink="/training" routerLinkActive="active">Treinos</a>
+    <a routerLink="/goals" routerLinkActive="active">Metas</a>
+  </nav>
 
-  <router-outlet></router-outlet>
+  <div class="sidebar-footer">
+    <button class="btn-primary">Começar</button>
+  </div>
+</aside>
+
+<main class="main-content">
+  <header class="topbar">
+    <label for="nav-toggle" class="topbar-toggle" aria-hidden="true">☰</label>
+    <div class="topbar-title">Gagnar</div>
+  </header>
+
+  <div class="container">
+    <section style="padding:2rem 0;">
+    </section>
+
+    <router-outlet></router-outlet>
+  </div>
 </main>
-
-=======
-<nav>
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-  <a routerLink="/calendar" routerLinkActive="active">Agenda</a>
-  <a routerLink="/diet" routerLinkActive="active">Dietas</a>
-  <a routerLink="/training" routerLinkActive="active">Treinos</a>
-  <a routerLink="/goals" routerLinkActive="active">Metas</a>
-</nav>
-<router-outlet></router-outlet>
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12

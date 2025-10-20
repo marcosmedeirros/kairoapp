@@ -22,7 +22,7 @@ public class GoalController {
     }
 
     @PostMapping
-<<<<<<< HEAD
+
     public ResponseEntity<String> create(@RequestBody Goal input) {
         if (input.getDescription() == null || input.getType() == null) {
             return ResponseEntity.badRequest().body("Descrição e tipo são obrigatórios.");
@@ -30,7 +30,7 @@ public class GoalController {
         // EnumType já será convertido automaticamente se valor válido for recebido
         repository.save(input);
         return ResponseEntity.status(201).body("Meta criada.");
-=======
+
     public ResponseEntity<Goal> create(@RequestBody Goal input) {
         if (input.getDescription() == null || input.getType() == null) {
             return ResponseEntity.badRequest().build();
@@ -38,6 +38,6 @@ public class GoalController {
         // EnumType já será convertido automaticamente se valor válido for recebido
         Goal saved = repository.save(input);
         return ResponseEntity.status(201).body(saved);
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
+
     }
 }

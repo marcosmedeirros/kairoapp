@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-<h2>Dietas</h2>
-<form (ngSubmit)="addLog()" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
-  <input [(ngModel)]="newLog.date" name="date" type="date" required />
-  <input [(ngModel)]="newLog.breakfast" name="breakfast" placeholder="Café da manhã" />
-  <input [(ngModel)]="newLog.lunch" name="lunch" placeholder="Almoço" />
-  <input [(ngModel)]="newLog.dinner" name="dinner" placeholder="Jantar" />
-  <input [(ngModel)]="newLog.snacks" name="snacks" placeholder="Lanches" />
-  <input [(ngModel)]="newLog.notes" name="notes" placeholder="Notas" />
-  <button type="submit">Registrar</button>
-</form>
-<ul>
-  <li *ngFor="let log of logs">
-    {{ log.date }} – Café: {{ log.breakfast || '-' }}, Almoço: {{ log.lunch || '-' }}, Jantar: {{ log.dinner || '-' }}, Lanches: {{ log.snacks || '-' }}, Notas: {{ log.notes || '-' }}
-  </li>
-</ul>
-=======
 <div class="diet-container">
   <div class="page-header">
     <h2>🍽️ Diário Alimentar</h2>
@@ -132,4 +115,3 @@
     </div>
   </div>
 </div>
->>>>>>> ba7594db0705cb1e18a12d85419b09a5c4b57b12
