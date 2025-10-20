@@ -43,18 +43,53 @@
 
     <div class="activities-grid" *ngIf="activities.length > 0">
       <div class="activity-card" *ngFor="let activity of activities">
-        <div class="activity-header">
-          <div>
-            <div class="activity-title">{{ activity.title }}</div>
-            <div class="activity-datetime">
-              <span class="activity-date">{{ activity.date | date:'dd/MM/yyyy' }}</span>
-              <span class="activity-time">{{ activity.time }}</span>
+
+        <!-- Edit mode -->
+        <div *ngIf="editingActivityId === activity.id; else showActivity">
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" [(ngModel)]="editedActivity.title" name="editTitle" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Data</label>
+              <input type="date" [(ngModel)]="editedActivity.date" name="editDate" />
+            </div>
+            <div class="form-group">
+              <label>Horário</label>
+              <input type="time" [(ngModel)]="editedActivity.time" name="editTime" />
             </div>
           </div>
+          <div class="form-group full-width">
+            <label>Descrição</label>
+            <textarea [(ngModel)]="editedActivity.description" name="editDescription"></textarea>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+            <button class="btn-submit" (click)="saveEdit(activity)">Salvar</button>
+            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+          </div>
         </div>
-        <div class="activity-description" *ngIf="activity.description">
-          {{ activity.description }}
-        </div>
+
+        <!-- View mode -->
+        <ng-template #showActivity>
+          <div class="activity-header">
+            <div>
+              <div class="activity-title">{{ activity.title }}</div>
+              <div class="activity-datetime">
+                <span class="activity-date">{{ formatDateDisplay(activity.date) }}</span>
+                <span class="activity-time">{{ activity.time }}</span>
+              </div>
+            </div>
+            <div style="margin-left:auto; display:flex; gap:0.5rem;">
+              <button class="btn-ghost" (click)="startEdit(activity)">Editar</button>
+              <button class="btn-ghost" (click)="deleteActivity(activity)">Excluir</button>
+            </div>
+          </div>
+          <div class="activity-description" *ngIf="activity.description">
+            {{ activity.description }}
+          </div>
+        </ng-template>
+
       </div>
     </div>
 

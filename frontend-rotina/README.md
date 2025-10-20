@@ -9,6 +9,8 @@ Este repositório contém um sistema web simples para acompanhar atividades sema
    ```bash
    cd routine-app/backend
    npm install
+   mvn clean spring-boot:run
+
    ```
 
    > Obs.: você precisará ter o Node.js e o gerenciador de pacotes `npm` instalados. O pacote `pg` depende de um servidor PostgreSQL rodando e acessível.

@@ -7,6 +7,7 @@ com\example\routineapp\RoutineAppApplication.class
 com\example\routineapp\model\DietLog.class
 com\example\routineapp\model\TrainingNote.class
 com\example\routineapp\controller\GoalController.class
+com\example\routineapp\model\GoalTypeConverter.class
 com\example\routineapp\model\Activity.class
 com\example\routineapp\repository\TrainingNoteRepository.class
 com\example\routineapp\model\Goal.class

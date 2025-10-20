@@ -1,0 +1,88 @@
+<div class="activity-container">
+  <div class="page-header">
+    <h2>🏃 Atividades</h2>
+    <p class="page-subtitle">Gerencie suas atividades e compromissos</p>
+  </div>
+
+  <div class="form-card">
+    <h3>➕ Nova Atividade</h3>
+    <form (ngSubmit)="addActivity()" class="activity-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Título *</label>
+          <input type="text" [(ngModel)]="newActivity.title" name="title" required />
+        </div>
+        <div class="form-group">
+          <label>Data</label>
+          <input type="date" [(ngModel)]="newActivity.date" name="date" />
+        </div>
+        <div class="form-group">
+          <label>Hora</label>
+          <input type="time" [(ngModel)]="newActivity.time" name="time" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea [(ngModel)]="newActivity.description" name="description"></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">💾 Adicionar</button>
+    </form>
+  </div>
+
+  <div class="list-section">
+    <h3>Minhas Atividades <span class="count">{{ activities.length }}</span></h3>
+
+    <div *ngIf="activities.length === 0" class="empty-state">
+      <p>Nenhuma atividade cadastrada ainda.</p>
+    </div>
+
+    <div class="activity-list" *ngIf="activities.length > 0">
+      <div class="activity-card" *ngFor="let a of activities">
+        <div *ngIf="editingActivityId === a.id; else showCard">
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" [(ngModel)]="editedActivity.title" name="editTitle" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Data</label>
+              <input type="date" [(ngModel)]="editedActivity.date" name="editDate" />
+            </div>
+            <div class="form-group">
+              <label>Hora</label>
+              <input type="time" [(ngModel)]="editedActivity.time" name="editTime" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Descrição</label>
+            <textarea [(ngModel)]="editedActivity.description" name="editDescription"></textarea>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+            <button class="btn-submit" (click)="saveEdit(a)">Salvar</button>
+            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+          </div>
+        </div>
+
+        <ng-template #showCard>
+          <div class="card-header">
+            <div class="card-title">{{ a.title }}</div>
+            <div style="margin-left:auto; display:flex; gap:0.5rem;">
+              <button class="btn-ghost" (click)="startEdit(a)">Editar</button>
+              <button class="btn-ghost" (click)="deleteActivity(a)">Excluir</button>
+            </div>
+          </div>
+          <div class="card-meta">
+            <div *ngIf="a.date">📅 {{ formatDateDisplay(a.date) }}</div>
+            <div *ngIf="a.time">⏰ {{ a.time }}</div>
+          </div>
+          <div class="card-desc" *ngIf="a.description">{{ a.description }}</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REMOVIDO: Activity component removido a pedido do usuário. -->
+<div style="padding:1rem; color:#666; font-style:italic;">Componente `Activity` removido.</div>

@@ -54,11 +54,37 @@
 
     <div class="notes-grid" *ngIf="notes.length > 0">
       <div class="note-card" *ngFor="let n of notes">
-        <div class="note-header">
-          <div class="note-date">{{ n.date | date:'dd/MM/yyyy' }}</div>
-          <div class="workout-icon">💪</div>
+
+        <!-- edit mode -->
+        <div *ngIf="editingNoteId === n.id; else showNote">
+          <div class="form-group">
+            <label>Data</label>
+            <input type="date" [(ngModel)]="editedNote.date" name="editDate" />
+          </div>
+          <div class="form-group full-width">
+            <label>Descrição</label>
+            <textarea [(ngModel)]="editedNote.note" name="editNote"></textarea>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+            <button class="btn-submit" (click)="saveEdit(n)">Salvar</button>
+            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+          </div>
         </div>
-        <div class="note-content">{{ n.note }}</div>
+
+        <!-- view mode -->
+        <ng-template #showNote>
+          <div class="note-header" style="display:flex; align-items:center; gap:0.5rem;">
+            <div style="flex:1">
+              <div class="note-date">{{ n.date | date:'dd/MM/yyyy' }}</div>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn-ghost" (click)="startEdit(n)">Editar</button>
+              <button class="btn-ghost" (click)="deleteNote(n)">Excluir</button>
+            </div>
+          </div>
+          <div class="note-content">{{ n.note }}</div>
+        </ng-template>
+
       </div>
     </div>
 

@@ -72,40 +72,85 @@
 
     <div class="logs-grid" *ngIf="logs.length > 0">
       <div class="log-card" *ngFor="let log of logs">
-        <div class="log-header">
-          <div class="log-date">{{ log.date | date:'dd/MM/yyyy' }}</div>
+
+        <!-- If editing show form -->
+        <div *ngIf="editingLogId === log.id; else showLog">
+          <div class="form-group">
+            <label>Data</label>
+            <input type="date" [(ngModel)]="editedLog.date" name="editDate" />
+          </div>
+
+          <div class="meals-grid">
+            <div class="form-group">
+              <label>Café</label>
+              <textarea [(ngModel)]="editedLog.breakfast" name="editBreakfast"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Almoço</label>
+              <textarea [(ngModel)]="editedLog.lunch" name="editLunch"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Jantar</label>
+              <textarea [(ngModel)]="editedLog.dinner" name="editDinner"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Lanches</label>
+              <textarea [(ngModel)]="editedLog.snacks" name="editSnacks"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Observações</label>
+            <textarea [(ngModel)]="editedLog.notes" name="editNotes"></textarea>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+            <button class="btn-submit" (click)="saveEdit(log)">Salvar</button>
+            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+          </div>
         </div>
 
-        <div class="meals-list">
-          <div class="meal-item" *ngIf="log.breakfast">
-            <div class="meal-label">☕ Café da Manhã</div>
-            <div class="meal-content">{{ log.breakfast }}</div>
+        <ng-template #showLog>
+          <div class="log-header">
+            <div class="log-date">{{ log.date | date:'dd/MM/yyyy' }}</div>
+            <div style="margin-left:auto; display:flex; gap:0.5rem;">
+              <button class="btn-ghost" (click)="startEdit(log)">Editar</button>
+              <button class="btn-ghost" (click)="deleteLog(log)">Excluir</button>
+            </div>
           </div>
 
-          <div class="meal-item" *ngIf="log.lunch">
-            <div class="meal-label">🍚 Almoço</div>
-            <div class="meal-content">{{ log.lunch }}</div>
+          <div class="meals-list">
+            <div class="meal-item" *ngIf="log.breakfast">
+              <div class="meal-label">☕ Café da Manhã</div>
+              <div class="meal-content">{{ log.breakfast }}</div>
+            </div>
+
+            <div class="meal-item" *ngIf="log.lunch">
+              <div class="meal-label">🍚 Almoço</div>
+              <div class="meal-content">{{ log.lunch }}</div>
+            </div>
+
+            <div class="meal-item" *ngIf="log.dinner">
+              <div class="meal-label">🥗 Jantar</div>
+              <div class="meal-content">{{ log.dinner }}</div>
+            </div>
+
+            <div class="meal-item" *ngIf="log.snacks">
+              <div class="meal-label">🍎 Lanches</div>
+              <div class="meal-content">{{ log.snacks }}</div>
+            </div>
+
+            <div class="meal-item" *ngIf="!log.breakfast && !log.lunch && !log.dinner && !log.snacks">
+              <div class="meal-content meal-empty">Nenhuma refeição registrada</div>
+            </div>
           </div>
 
-          <div class="meal-item" *ngIf="log.dinner">
-            <div class="meal-label">🥗 Jantar</div>
-            <div class="meal-content">{{ log.dinner }}</div>
+          <div class="notes-section" *ngIf="log.notes">
+            <div class="notes-label">📝 Observações</div>
+            <div class="notes-content">{{ log.notes }}</div>
           </div>
+        </ng-template>
 
-          <div class="meal-item" *ngIf="log.snacks">
-            <div class="meal-label">🍎 Lanches</div>
-            <div class="meal-content">{{ log.snacks }}</div>
-          </div>
-
-          <div class="meal-item" *ngIf="!log.breakfast && !log.lunch && !log.dinner && !log.snacks">
-            <div class="meal-content meal-empty">Nenhuma refeição registrada</div>
-          </div>
-        </div>
-
-        <div class="notes-section" *ngIf="log.notes">
-          <div class="notes-label">📝 Observações</div>
-          <div class="notes-content">{{ log.notes }}</div>
-        </div>
       </div>
     </div>
 

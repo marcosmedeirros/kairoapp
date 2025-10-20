@@ -1,0 +1,12 @@
+.activity-container { padding: 1rem; }
+.page-header { margin-bottom: 1rem; }
+.form-card, .list-section { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 1rem; }
+.form-row { display:flex; gap:0.5rem; }
+.form-group { flex:1; display:flex; flex-direction:column; gap:0.25rem; }
+.activity-list .activity-card { border-bottom: 1px solid #eee; padding: 0.75rem 0; }
+.card-header { display:flex; align-items:center; }
+.card-title { font-weight:600; }
+.btn-submit { background:#2b6cb0; color:#fff; border:none; padding:0.5rem 0.75rem; border-radius:6px; cursor:pointer; }
+.btn-ghost { background:transparent; border:1px solid #ddd; padding:0.4rem 0.6rem; border-radius:6px; cursor:pointer; }
+.count { font-size:0.9rem; color:#666; margin-left:0.5rem; }
+

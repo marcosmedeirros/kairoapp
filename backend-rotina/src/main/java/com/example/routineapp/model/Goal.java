@@ -12,7 +12,7 @@ public class Goal {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = GoalTypeConverter.class)
     private GoalType type;
 
     @Column(name = "start_date")

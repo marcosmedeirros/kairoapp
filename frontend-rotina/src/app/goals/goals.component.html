@@ -47,26 +47,59 @@
 
     <div class="goals-grid" *ngIf="goals.length > 0">
       <div class="goal-card" [ngClass]="g.type" *ngFor="let g of goals">
-        <span class="goal-type-badge" [ngClass]="g.type">
-          {{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}
-        </span>
-        
-        <div class="goal-description">{{ g.description }}</div>
-        
-        <div class="goal-dates" *ngIf="g.startDate || g.endDate">
-          <div class="goal-date-item" *ngIf="g.startDate">
-            <span class="goal-date-label">Início</span>
-            <span class="goal-date-value">{{ g.startDate | date:'dd/MM/yyyy' }}</span>
+
+        <!-- If this goal is being edited show the edit form -->
+        <div *ngIf="editingGoalId === g.id; else showGoal">
+          <div class="form-group">
+            <label>Descrição</label>
+            <textarea [(ngModel)]="editedGoal.description" name="editDescription"></textarea>
           </div>
-          <div class="goal-date-item" *ngIf="g.endDate">
-            <span class="goal-date-label">Conclusão</span>
-            <span class="goal-date-value">{{ g.endDate | date:'dd/MM/yyyy' }}</span>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tipo</label>
+              <select [(ngModel)]="editedGoal.type" name="editType">
+                <option value="WEEKLY">📅 Semanal</option>
+                <option value="MONTHLY">📆 Mensal</option>
+                <option value="YEARLY">📊 Anual</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Início</label>
+              <input type="date" [(ngModel)]="editedGoal.startDate" name="editStart" />
+            </div>
+            <div class="form-group">
+              <label>Fim</label>
+              <input type="date" [(ngModel)]="editedGoal.endDate" name="editEnd" />
+            </div>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+            <button class="btn-submit" (click)="saveEdit(g)">Salvar</button>
+            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
           </div>
         </div>
 
-        <div class="goal-icon">
-          {{ g.type === 'WEEKLY' ? '📅' : g.type === 'MONTHLY' ? '📆' : '📊' }}
-        </div>
+        <!-- Read-only view -->
+        <ng-template #showGoal>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="goal-type-badge">{{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}</span>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn-ghost" (click)="startEdit(g)">Editar</button>
+              <button class="btn-ghost" (click)="deleteGoal(g)">Excluir</button>
+            </div>
+          </div>
+          <div class="goal-description">{{ g.description }}</div>
+          <div class="goal-dates" *ngIf="g.startDate || g.endDate">
+            <div class="goal-date-item" *ngIf="g.startDate">
+              <span class="goal-date-label">Início</span>
+              <span class="goal-date-value">{{ g.startDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="goal-date-item" *ngIf="g.endDate">
+              <span class="goal-date-label">Conclusão</span>
+              <span class="goal-date-value">{{ g.endDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </ng-template>
+
       </div>
     </div>
 
