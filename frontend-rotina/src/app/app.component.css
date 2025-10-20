@@ -3,27 +3,28 @@ nav {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.25rem 0;
+  align-items: center;
 }
 
 nav a {
-  color: white;
+  color: var(--color-secondary-text);
   text-decoration: none;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.75rem;
   border-radius: 6px;
   font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: background-color 0.18s, transform 0.12s;
 }
 
 nav a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(76, 111, 163, 0.08);
+  color: var(--color-accent);
   transform: translateY(-2px);
 }
 
 nav a.active {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(76, 111, 163, 0.12);
+  color: var(--color-accent);
   font-weight: 700;
 }
 
@@ -31,5 +32,13 @@ nav a.active {
 :host {
   display: block;
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg);
+}
+
+/* Small responsive adjustments */
+@media (max-width: 700px) {
+  nav {
+    gap: 0.5rem;
+    overflow-x: auto;
+  }
 }

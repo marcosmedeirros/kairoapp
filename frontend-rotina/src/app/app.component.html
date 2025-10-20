@@ -1,8 +1,26 @@
-<nav>
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-  <a routerLink="/calendar" routerLinkActive="active">Agenda</a>
-  <a routerLink="/diet" routerLinkActive="active">Dietas</a>
-  <a routerLink="/training" routerLinkActive="active">Treinos</a>
-  <a routerLink="/goals" routerLinkActive="active">Metas</a>
-</nav>
-<router-outlet></router-outlet>
+<header class="header">
+  <div class="container" style="display:flex; align-items:center; gap:1rem;">
+    <div class="brand">Gagnar</div>
+    <nav>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/calendar" routerLinkActive="active">Agenda</a>
+      <a routerLink="/diet" routerLinkActive="active">Dietas</a>
+      <a routerLink="/training" routerLinkActive="active">Treinos</a>
+      <a routerLink="/goals" routerLinkActive="active">Metas</a>
+    </nav>
+    <div style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
+      <button class="btn-primary">Começar</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section style="padding:2rem 0;">
+    <h1 style="font-weight:700; margin-bottom:0.5rem; color:var(--color-text);">Bem-vindo ao Gagnar</h1>
+    <p style="color:var(--color-secondary-text); margin-bottom:1rem;">Organize suas dietas, treinos e metas em um só lugar.</p>
+    <a class="btn-primary" href="#">Ir para Dashboard</a>
+  </section>
+
+  <router-outlet></router-outlet>
+</main>
+
