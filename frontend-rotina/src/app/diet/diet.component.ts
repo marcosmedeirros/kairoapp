@@ -21,6 +21,10 @@ export class DietComponent implements OnInit {
   editingLogId: number | null = null;
   editedLog: any = null;
 
+  // deletion modal state
+  showDeleteModal: boolean = false;
+  logToDelete: any = null;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -70,12 +74,24 @@ export class DietComponent implements OnInit {
     });
   }
 
-  deleteLog(log: any) {
-    if (!confirm('Confirmar exclusão do registro?')) return;
-    this.http.delete(`/api/diet/${log.id}`).subscribe(() => {
+  openDeleteModal(log: any) {
+    this.logToDelete = log;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.logToDelete = null;
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (!this.logToDelete) return;
+    this.http.delete(`/api/diet/${this.logToDelete.id}`).subscribe(() => {
+      this.closeDeleteModal();
       this.fetchLogs();
     }, (err) => {
       console.error('Failed to delete diet log', err);
+      this.closeDeleteModal();
     });
   }
 

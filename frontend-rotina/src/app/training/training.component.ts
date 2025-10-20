@@ -17,6 +17,10 @@ export class TrainingComponent implements OnInit {
   editingNoteId: number | null = null;
   editedNote: any = null;
 
+  // deletion modal state
+  showDeleteModal: boolean = false;
+  noteToDelete: any = null;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -59,12 +63,24 @@ export class TrainingComponent implements OnInit {
     });
   }
 
-  deleteNote(n: any) {
-    if (!confirm('Confirmar exclusão do registro de treino?')) return;
-    this.http.delete(`/api/training/${n.id}`).subscribe(() => {
+  openDeleteModal(n: any) {
+    this.noteToDelete = n;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.noteToDelete = null;
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (!this.noteToDelete) return;
+    this.http.delete(`/api/training/${this.noteToDelete.id}`).subscribe(() => {
+      this.closeDeleteModal();
       this.fetchNotes();
     }, (err) => {
       console.error('Failed to delete note', err);
+      this.closeDeleteModal();
     });
   }
 

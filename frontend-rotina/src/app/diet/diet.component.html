@@ -77,31 +77,31 @@
         <div *ngIf="editingLogId === log.id; else showLog">
           <div class="form-group">
             <label>Data</label>
-            <input type="date" [(ngModel)]="editedLog.date" name="editDate" />
+            <input class="edit-input" type="date" [(ngModel)]="editedLog.date" name="editDate" />
           </div>
 
           <div class="meals-grid">
             <div class="form-group">
               <label>Café</label>
-              <textarea [(ngModel)]="editedLog.breakfast" name="editBreakfast"></textarea>
+              <textarea class="edit-input" [(ngModel)]="editedLog.breakfast" name="editBreakfast"></textarea>
             </div>
             <div class="form-group">
               <label>Almoço</label>
-              <textarea [(ngModel)]="editedLog.lunch" name="editLunch"></textarea>
+              <textarea class="edit-input" [(ngModel)]="editedLog.lunch" name="editLunch"></textarea>
             </div>
             <div class="form-group">
               <label>Jantar</label>
-              <textarea [(ngModel)]="editedLog.dinner" name="editDinner"></textarea>
+              <textarea class="edit-input" [(ngModel)]="editedLog.dinner" name="editDinner"></textarea>
             </div>
             <div class="form-group">
               <label>Lanches</label>
-              <textarea [(ngModel)]="editedLog.snacks" name="editSnacks"></textarea>
+              <textarea class="edit-input" [(ngModel)]="editedLog.snacks" name="editSnacks"></textarea>
             </div>
           </div>
 
           <div class="form-group">
             <label>Observações</label>
-            <textarea [(ngModel)]="editedLog.notes" name="editNotes"></textarea>
+            <textarea class="edit-input" [(ngModel)]="editedLog.notes" name="editNotes"></textarea>
           </div>
 
           <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
@@ -114,8 +114,8 @@
           <div class="log-header">
             <div class="log-date">{{ log.date | date:'dd/MM/yyyy' }}</div>
             <div style="margin-left:auto; display:flex; gap:0.5rem;">
-              <button class="btn-ghost" (click)="startEdit(log)">Editar</button>
-              <button class="btn-ghost" (click)="deleteLog(log)">Excluir</button>
+              <button class="icon-btn" (click)="startEdit(log)" title="Editar"><span class="icon">✏️</span></button>
+              <button class="icon-btn danger" (click)="openDeleteModal(log)" title="Excluir"><span class="icon">🗑️</span></button>
             </div>
           </div>
 
@@ -157,6 +157,18 @@
     <div class="empty-state" *ngIf="logs.length === 0">
       <div class="empty-state-icon">🍽️</div>
       <p>Nenhum registro de alimentação ainda. Comece registrando suas refeições acima!</p>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="showDeleteModal">
+    <div class="modal-card">
+      <h3>Confirmar exclusão</h3>
+      <p>Tem certeza que deseja excluir este registro de alimentação?</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn-submit danger" (click)="confirmDelete()">Excluir</button>
+      </div>
     </div>
   </div>
 </div>

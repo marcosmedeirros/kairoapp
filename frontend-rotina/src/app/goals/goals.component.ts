@@ -19,6 +19,10 @@ export class GoalsComponent implements OnInit {
   editingGoalId: number | null = null;
   editedGoal: any = null;
 
+  // Deletion modal state
+  showDeleteModal: boolean = false;
+  goalToDelete: any = null;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -75,12 +79,25 @@ export class GoalsComponent implements OnInit {
     });
   }
 
-  deleteGoal(goal: any) {
-    if (!confirm('Confirmar exclusão da meta?')) return;
-    this.http.delete(`/api/goals/${goal.id}`).subscribe(() => {
+  // Open modal and set candidate
+  openDeleteModal(goal: any) {
+    this.goalToDelete = goal;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.goalToDelete = null;
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (!this.goalToDelete) return;
+    this.http.delete(`/api/goals/${this.goalToDelete.id}`).subscribe(() => {
+      this.closeDeleteModal();
       this.fetchGoals();
     }, (err) => {
       console.error('Failed to delete goal', err);
+      this.closeDeleteModal();
     });
   }
 

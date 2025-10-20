@@ -10,21 +10,21 @@
       <div class="form-row">
         <div class="form-group">
           <label>Título *</label>
-          <input type="text" [(ngModel)]="newActivity.title" name="title" required />
+          <input class="edit-input" type="text" [(ngModel)]="newActivity.title" name="title" required />
         </div>
         <div class="form-group">
           <label>Data</label>
-          <input type="date" [(ngModel)]="newActivity.date" name="date" />
+          <input class="edit-input" type="date" [(ngModel)]="newActivity.date" name="date" />
         </div>
         <div class="form-group">
           <label>Hora</label>
-          <input type="time" [(ngModel)]="newActivity.time" name="time" />
+          <input class="edit-input" type="time" [(ngModel)]="newActivity.time" name="time" />
         </div>
       </div>
 
       <div class="form-group">
         <label>Descrição</label>
-        <textarea [(ngModel)]="newActivity.description" name="description"></textarea>
+        <textarea class="edit-input" [(ngModel)]="newActivity.description" name="description"></textarea>
       </div>
 
       <button type="submit" class="btn-submit">💾 Adicionar</button>
@@ -43,21 +43,21 @@
         <div *ngIf="editingActivityId === a.id; else showCard">
           <div class="form-group">
             <label>Título</label>
-            <input type="text" [(ngModel)]="editedActivity.title" name="editTitle" />
+            <input class="edit-input" type="text" [(ngModel)]="editedActivity.title" name="editTitle" />
           </div>
           <div class="form-row">
             <div class="form-group">
               <label>Data</label>
-              <input type="date" [(ngModel)]="editedActivity.date" name="editDate" />
+              <input class="edit-input" type="date" [(ngModel)]="editedActivity.date" name="editDate" />
             </div>
             <div class="form-group">
               <label>Hora</label>
-              <input type="time" [(ngModel)]="editedActivity.time" name="editTime" />
+              <input class="edit-input" type="time" [(ngModel)]="editedActivity.time" name="editTime" />
             </div>
           </div>
           <div class="form-group">
             <label>Descrição</label>
-            <textarea [(ngModel)]="editedActivity.description" name="editDescription"></textarea>
+            <textarea class="edit-input" [(ngModel)]="editedActivity.description" name="editDescription"></textarea>
           </div>
           <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
             <button class="btn-submit" (click)="saveEdit(a)">Salvar</button>
@@ -69,8 +69,8 @@
           <div class="card-header">
             <div class="card-title">{{ a.title }}</div>
             <div style="margin-left:auto; display:flex; gap:0.5rem;">
-              <button class="btn-ghost" (click)="startEdit(a)">Editar</button>
-              <button class="btn-ghost" (click)="deleteActivity(a)">Excluir</button>
+              <button class="icon-btn" (click)="startEdit(a)" title="Editar"><span class="icon">✏️</span></button>
+              <button class="icon-btn danger" (click)="openDeleteModal(a)" title="Excluir"><span class="icon">🗑️</span></button>
             </div>
           </div>
           <div class="card-meta">
@@ -80,6 +80,18 @@
           <div class="card-desc" *ngIf="a.description">{{ a.description }}</div>
         </ng-template>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Adiciona modal de confirmação estilizado para exclusão -->
+<div class="modal-backdrop" *ngIf="showDeleteModal">
+  <div class="modal-card">
+    <h3>Confirmar exclusão</h3>
+    <p>Tem certeza que deseja excluir esta atividade?</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" (click)="closeDeleteModal()">Cancelar</button>
+      <button class="btn-submit danger" (click)="confirmDelete()">Excluir</button>
     </div>
   </div>
 </div>

@@ -52,12 +52,12 @@
         <div *ngIf="editingGoalId === g.id; else showGoal">
           <div class="form-group">
             <label>Descrição</label>
-            <textarea [(ngModel)]="editedGoal.description" name="editDescription"></textarea>
+            <textarea class="edit-input" [(ngModel)]="editedGoal.description" name="editDescription"></textarea>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label>Tipo</label>
-              <select [(ngModel)]="editedGoal.type" name="editType">
+              <select class="edit-input" [(ngModel)]="editedGoal.type" name="editType">
                 <option value="WEEKLY">📅 Semanal</option>
                 <option value="MONTHLY">📆 Mensal</option>
                 <option value="YEARLY">📊 Anual</option>
@@ -65,11 +65,11 @@
             </div>
             <div class="form-group">
               <label>Início</label>
-              <input type="date" [(ngModel)]="editedGoal.startDate" name="editStart" />
+              <input class="edit-input" type="date" [(ngModel)]="editedGoal.startDate" name="editStart" />
             </div>
             <div class="form-group">
               <label>Fim</label>
-              <input type="date" [(ngModel)]="editedGoal.endDate" name="editEnd" />
+              <input class="edit-input" type="date" [(ngModel)]="editedGoal.endDate" name="editEnd" />
             </div>
           </div>
           <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
@@ -83,8 +83,8 @@
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span class="goal-type-badge">{{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}</span>
             <div style="display:flex; gap:0.5rem;">
-              <button class="btn-ghost" (click)="startEdit(g)">Editar</button>
-              <button class="btn-ghost" (click)="deleteGoal(g)">Excluir</button>
+              <button class="icon-btn" (click)="startEdit(g)" title="Editar"><span class="icon">✏️</span></button>
+              <button class="icon-btn danger" (click)="openDeleteModal(g)" title="Excluir"><span class="icon">🗑️</span></button>
             </div>
           </div>
           <div class="goal-description">{{ g.description }}</div>
@@ -106,6 +106,18 @@
     <div class="empty-state" *ngIf="goals.length === 0">
       <div class="empty-state-icon">🎯</div>
       <p>Nenhuma meta definida ainda. Crie sua primeira meta acima!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <h3>Confirmar exclusão</h3>
+    <p>Tem certeza que deseja excluir esta meta?</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" (click)="closeDeleteModal()">Cancelar</button>
+      <button class="btn-submit danger" (click)="confirmDelete()">Excluir</button>
     </div>
   </div>
 </div>

@@ -48,21 +48,21 @@
         <div *ngIf="editingActivityId === activity.id; else showActivity">
           <div class="form-group">
             <label>Título</label>
-            <input type="text" [(ngModel)]="editedActivity.title" name="editTitle" />
+            <input class="edit-input" type="text" [(ngModel)]="editedActivity.title" name="editTitle" />
           </div>
           <div class="form-row">
             <div class="form-group">
               <label>Data</label>
-              <input type="date" [(ngModel)]="editedActivity.date" name="editDate" />
+              <input class="edit-input" type="date" [(ngModel)]="editedActivity.date" name="editDate" />
             </div>
             <div class="form-group">
               <label>Horário</label>
-              <input type="time" [(ngModel)]="editedActivity.time" name="editTime" />
+              <input class="edit-input" type="time" [(ngModel)]="editedActivity.time" name="editTime" />
             </div>
           </div>
           <div class="form-group full-width">
             <label>Descrição</label>
-            <textarea [(ngModel)]="editedActivity.description" name="editDescription"></textarea>
+            <textarea class="edit-input" [(ngModel)]="editedActivity.description" name="editDescription"></textarea>
           </div>
           <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
             <button class="btn-submit" (click)="saveEdit(activity)">Salvar</button>
@@ -81,8 +81,8 @@
               </div>
             </div>
             <div style="margin-left:auto; display:flex; gap:0.5rem;">
-              <button class="btn-ghost" (click)="startEdit(activity)">Editar</button>
-              <button class="btn-ghost" (click)="deleteActivity(activity)">Excluir</button>
+              <button class="icon-btn" (click)="startEdit(activity)" title="Editar"><span class="icon">✏️</span></button>
+              <button class="icon-btn danger" (click)="openDeleteModal(activity)" title="Excluir"><span class="icon">🗑️</span></button>
             </div>
           </div>
           <div class="activity-description" *ngIf="activity.description">
@@ -96,6 +96,18 @@
     <div class="empty-state" *ngIf="activities.length === 0">
       <div class="empty-state-icon">📋</div>
       <p>Nenhuma atividade agendada ainda. Adicione sua primeira atividade acima!</p>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Confirmar exclusão</h3>
+      <p>Tem certeza que deseja excluir esta atividade?</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn-submit danger" (click)="confirmDelete()">Excluir</button>
+      </div>
     </div>
   </div>
 </div>

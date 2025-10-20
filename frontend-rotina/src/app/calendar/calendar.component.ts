@@ -19,6 +19,10 @@ export class CalendarComponent implements OnInit {
   editingActivityId: number | null = null;
   editedActivity: any = null;
 
+  // deletion modal state
+  showDeleteModal: boolean = false;
+  activityToDelete: any = null;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -68,11 +72,25 @@ export class CalendarComponent implements OnInit {
     }, (err) => console.error('Failed to update activity', err));
   }
 
-  deleteActivity(a: any) {
-    if (!confirm('Confirmar exclusão da atividade?')) return;
-    this.http.delete(`/api/activities/${a.id}`).subscribe(() => {
+  openDeleteModal(a: any) {
+    this.activityToDelete = a;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.activityToDelete = null;
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (!this.activityToDelete) return;
+    this.http.delete(`/api/activities/${this.activityToDelete.id}`).subscribe(() => {
+      this.closeDeleteModal();
       this.fetchActivities();
-    }, (err) => console.error('Failed to delete activity', err));
+    }, (err) => {
+      console.error('Failed to delete activity', err);
+      this.closeDeleteModal();
+    });
   }
 
   private formatDateForInput(input: any): string {
