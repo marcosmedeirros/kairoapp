@@ -7,79 +7,133 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./training.component.css']
 })
 export class TrainingComponent implements OnInit {
-  notes: any[] = [];
-  newNote = {
+  // Cadastro de treinos (templates)
+  workouts: any[] = [];
+  newWorkout = {
+    name: '',
+    exercises: ''
+  };
+  editingWorkoutId: number | null = null;
+  editedWorkout: any = null;
+
+  // Registro de execução
+  logs: any[] = [];
+  newLog = {
     date: '',
-    note: ''
+    workoutId: null
   };
 
-  // editing state
-  editingNoteId: number | null = null;
-  editedNote: any = null;
-
-  // deletion modal state
+  // Modals
   showDeleteModal: boolean = false;
-  noteToDelete: any = null;
+  itemToDelete: any = null;
+  deleteType: 'workout' | 'log' = 'log';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchNotes();
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    const d = String(today.getDate()).padStart(2, '0');
+    this.newLog.date = `${y}-${m}-${d}`;
+    
+    this.fetchWorkouts();
+    this.fetchLogs();
   }
 
-  fetchNotes() {
-    this.http.get<any[]>('/api/training').subscribe((data) => {
-      this.notes = data;
+  // === WORKOUTS (Cadastro de Treinos) ===
+  fetchWorkouts() {
+    this.http.get<any[]>('/api/workouts').subscribe((data) => {
+      this.workouts = data || [];
     });
   }
 
-  addNote() {
-    this.http.post('/api/training', this.newNote).subscribe(() => {
-      this.newNote = { date: '', note: '' };
-      this.fetchNotes();
+  addWorkout() {
+    this.http.post('/api/workouts', this.newWorkout).subscribe(() => {
+      this.newWorkout = { name: '', exercises: '' };
+      this.fetchWorkouts();
     }, (err) => {
-      console.error('Failed to add note', err);
+      console.error('Failed to add workout', err);
     });
   }
 
-  startEdit(n: any) {
-    this.editingNoteId = n.id;
-    this.editedNote = { date: this.formatDateForInput(n.date), note: n.note };
+  startEditWorkout(w: any) {
+    this.editingWorkoutId = w.id;
+    this.editedWorkout = { name: w.name, exercises: w.exercises };
   }
 
-  cancelEdit() {
-    this.editingNoteId = null;
-    this.editedNote = null;
+  cancelEditWorkout() {
+    this.editingWorkoutId = null;
+    this.editedWorkout = null;
   }
 
-  saveEdit(n: any) {
-    const payload = { ...this.editedNote };
-    this.http.put(`/api/training/${n.id}`, payload).subscribe(() => {
-      this.editingNoteId = null;
-      this.editedNote = null;
-      this.fetchNotes();
+  saveEditWorkout(w: any) {
+    this.http.put(`/api/workouts/${w.id}`, this.editedWorkout).subscribe(() => {
+      this.editingWorkoutId = null;
+      this.editedWorkout = null;
+      this.fetchWorkouts();
     }, (err) => {
-      console.error('Failed to update note', err);
+      console.error('Failed to update workout', err);
     });
   }
 
-  openDeleteModal(n: any) {
-    this.noteToDelete = n;
+  openDeleteWorkout(w: any) {
+    this.itemToDelete = w;
+    this.deleteType = 'workout';
     this.showDeleteModal = true;
   }
 
+  // === LOGS (Registro de Execução) ===
+  fetchLogs() {
+    this.http.get<any[]>('/api/workout-logs').subscribe((data) => {
+      this.logs = (data || []).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    });
+  }
+
+  addLog() {
+    if (!this.newLog.workoutId) {
+      alert('Selecione um treino');
+      return;
+    }
+    this.http.post('/api/workout-logs', this.newLog).subscribe(() => {
+      const today = new Date();
+      const y = today.getFullYear();
+      const m = String(today.getMonth() + 1).padStart(2, '0');
+      const d = String(today.getDate()).padStart(2, '0');
+      this.newLog = { date: `${y}-${m}-${d}`, workoutId: null };
+      this.fetchLogs();
+    }, (err) => {
+      console.error('Failed to add log', err);
+    });
+  }
+
+  openDeleteLog(log: any) {
+    this.itemToDelete = log;
+    this.deleteType = 'log';
+    this.showDeleteModal = true;
+  }
+
+  // === MODAL ===
   closeDeleteModal() {
-    this.noteToDelete = null;
+    this.itemToDelete = null;
     this.showDeleteModal = false;
   }
 
   confirmDelete() {
-    if (!this.noteToDelete) return;
-    this.http.delete(`/api/training/${this.noteToDelete.id}`).subscribe(() => {
+    if (!this.itemToDelete) return;
+    const endpoint = this.deleteType === 'workout' 
+      ? `/api/workouts/${this.itemToDelete.id}`
+      : `/api/workout-logs/${this.itemToDelete.id}`;
+    
+    this.http.delete(endpoint).subscribe(() => {
       this.closeDeleteModal();
-      this.fetchNotes();
+      if (this.deleteType === 'workout') {
+        this.fetchWorkouts();
+      } else {
+        this.fetchLogs();
+      }
     }, (err) => {
-      console.error('Failed to delete note', err);
+      console.error('Failed to delete', err);
       this.closeDeleteModal();
     });
   }
@@ -87,22 +141,12 @@ export class TrainingComponent implements OnInit {
   getThisWeekCount(): number {
     const now = new Date();
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    return this.notes.filter(n => new Date(n.date) >= weekAgo).length;
+    return this.logs.filter(l => new Date(l.date) >= weekAgo).length;
   }
 
   getThisMonthCount(): number {
     const now = new Date();
     const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    return this.notes.filter(n => new Date(n.date) >= monthAgo).length;
-  }
-
-  private formatDateForInput(input: any): string {
-    if (!input) return '';
-    const d = new Date(input);
-    if (isNaN(d.getTime())) return '';
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+    return this.logs.filter(l => new Date(l.date) >= monthAgo).length;
   }
 }

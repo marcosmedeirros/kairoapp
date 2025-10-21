@@ -1,96 +1,141 @@
 <div class="training-container">
   <div class="page-header">
-    <h2>💪 Diário de Treinos</h2>
-    <p class="page-subtitle">Registre seus treinos e acompanhe sua evolução</p>
+    <h2>💪 Gestão de Treinos</h2>
+    <p class="page-subtitle">Cadastre seus treinos e registre suas execuções</p>
   </div>
 
   <!-- Stats Bar -->
-  <div class="stats-bar" *ngIf="notes.length > 0">
+  <div class="stats-bar" *ngIf="logs.length > 0">
     <div class="stat-card">
-      <div class="stat-value">{{ notes.length }}</div>
-      <div class="stat-label">Treinos Registrados</div>
+      <div class="stat-value">{{ logs.length }}</div>
+      <div class="stat-label">Treinos Realizados</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">{{ getThisWeekCount() }}</div>
-      <div class="stat-label">Treinos esta Semana</div>
+      <div class="stat-label">Esta Semana</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">{{ getThisMonthCount() }}</div>
-      <div class="stat-label">Treinos este Mês</div>
+      <div class="stat-label">Este Mês</div>
     </div>
   </div>
 
-  <!-- Form Section -->
+  <!-- SEÇÃO 1: Cadastro de Treinos -->
   <div class="form-card">
-    <h3>➕ Novo Registro de Treino</h3>
-    <form (ngSubmit)="addNote()" class="training-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="date">📅 Data do Treino *</label>
-          <input id="date" [(ngModel)]="newNote.date" name="date" type="date" required />
-        </div>
+    <h3>📋 Cadastrar Treino</h3>
+    <form (ngSubmit)="addWorkout()" class="training-form">
+      <div class="form-group">
+        <label for="workoutName">Nome do Treino *</label>
+        <input 
+          id="workoutName" 
+          [(ngModel)]="newWorkout.name" 
+          name="workoutName" 
+          type="text"
+          placeholder="Ex.: Treino A - Peito e Tríceps"
+          required />
       </div>
 
       <div class="form-group full-width">
-        <label for="note">📝 Descrição do Treino *</label>
+        <label for="exercises">Lista de Exercícios *</label>
         <textarea 
-          id="note" 
-          [(ngModel)]="newNote.note" 
-          name="note" 
-          placeholder="Descreva seu treino em detalhes...&#10;&#10;Exemplo:&#10;• Aquecimento: 10 min na esteira&#10;• Supino reto: 4x12 (60kg)&#10;• Leg press: 3x15 (100kg)&#10;• Abdominais: 3x20&#10;&#10;Observações: Ótimo treino! Aumentei a carga do supino."
+          id="exercises" 
+          [(ngModel)]="newWorkout.exercises" 
+          name="exercises" 
+          rows="5"
+          placeholder="Exemplo:&#10;Supino reto 4x12&#10;Supino inclinado 3x10&#10;Crucifixo 3x12&#10;Tríceps testa 3x12&#10;Tríceps corda 3x15"
           required></textarea>
       </div>
 
-      <button type="submit" class="btn-submit">💪 Registrar Treino</button>
+      <button type="submit" class="btn-submit">✅ Cadastrar Treino</button>
     </form>
   </div>
 
-  <!-- Notes Section -->
-  <div class="notes-section">
-    <h3>
-      Histórico de Treinos
-      <span class="note-count">{{ notes.length }}</span>
-    </h3>
-
-    <div class="notes-grid" *ngIf="notes.length > 0">
-      <div class="note-card" *ngFor="let n of notes">
-
-        <!-- edit mode -->
-        <div *ngIf="editingNoteId === n.id; else showNote">
+  <!-- Lista de Treinos Cadastrados -->
+  <div class="notes-section" *ngIf="workouts.length > 0">
+    <h3>Treinos Cadastrados <span class="note-count">{{ workouts.length }}</span></h3>
+    <div class="notes-grid">
+      <div class="note-card" *ngFor="let w of workouts">
+        
+        <!-- Modo edição -->
+        <div *ngIf="editingWorkoutId === w.id; else showWorkout">
           <div class="form-group">
-            <label>Data</label>
-            <input class="edit-input" type="date" [(ngModel)]="editedNote.date" name="editDate" />
+            <label for="editWorkoutName">Nome</label>
+            <input id="editWorkoutName" class="edit-input" type="text" [(ngModel)]="editedWorkout.name" name="editWorkoutName" title="Nome do treino" />
           </div>
           <div class="form-group full-width">
-            <label>Descrição</label>
-            <textarea class="edit-input" [(ngModel)]="editedNote.note" name="editNote"></textarea>
+            <label for="editExercises">Exercícios</label>
+            <textarea id="editExercises" class="edit-input" [(ngModel)]="editedWorkout.exercises" name="editExercises" rows="4" title="Lista de exercícios"></textarea>
           </div>
-          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-            <button class="btn-submit" (click)="saveEdit(n)">Salvar</button>
-            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+          <div class="flex-row mt-2">
+            <button class="btn-submit" (click)="saveEditWorkout(w)">Salvar</button>
+            <button class="btn-ghost" (click)="cancelEditWorkout()">Cancelar</button>
           </div>
         </div>
 
-        <!-- view mode -->
-        <ng-template #showNote>
-          <div class="note-header" style="display:flex; align-items:center; gap:0.5rem;">
-            <div style="flex:1">
-              <div class="note-date">{{ n.date | date:'dd/MM/yyyy' }}</div>
+        <!-- Modo visualização -->
+        <ng-template #showWorkout>
+          <div class="note-header">
+            <div class="flex-1">
+              <div class="workout-name">{{ w.name }}</div>
             </div>
-            <div style="display:flex; gap:0.5rem;">
-              <button class="icon-btn" (click)="startEdit(n)" title="Editar"><span class="icon">✏️</span></button>
-              <button class="icon-btn danger" (click)="openDeleteModal(n)" title="Excluir"><span class="icon">🗑️</span></button>
+            <div class="flex-row">
+              <button class="icon-btn" (click)="startEditWorkout(w)" title="Editar"><span class="icon">✏️</span></button>
+              <button class="icon-btn danger" (click)="openDeleteWorkout(w)" title="Excluir"><span class="icon">🗑️</span></button>
             </div>
           </div>
-          <div class="note-content">{{ n.note }}</div>
+          <div class="note-content workout-exercises">{{ w.exercises }}</div>
         </ng-template>
 
       </div>
     </div>
+  </div>
 
-    <div class="empty-state" *ngIf="notes.length === 0">
+  <!-- SEÇÃO 2: Registrar Execução -->
+  <div class="form-card section-spacing">
+    <h3>✅ Registrar Execução de Treino</h3>
+    <form (ngSubmit)="addLog()" class="training-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="logDate">📅 Dia</label>
+          <input id="logDate" [(ngModel)]="newLog.date" name="logDate" type="date" required />
+        </div>
+        <div class="form-group">
+          <label for="logWorkout">🏋️ Treino</label>
+          <select id="logWorkout" [(ngModel)]="newLog.workoutId" name="logWorkout" required>
+            <option [value]="null">Selecione um treino</option>
+            <option *ngFor="let w of workouts" [value]="w.id">{{ w.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">💪 Registrar</button>
+    </form>
+  </div>
+
+  <!-- SEÇÃO 3: Histórico de Execuções -->
+  <div class="notes-section">
+    <h3>Histórico de Execuções <span class="note-count">{{ logs.length }}</span></h3>
+
+    <div class="notes-grid" *ngIf="logs.length > 0">
+      <div class="note-card" *ngFor="let log of logs">
+        <div class="note-header">
+          <div class="flex-1">
+            <div class="note-date">{{ log.date | date:'dd/MM/yyyy' }}</div>
+            <div class="workout-name-small">{{ log.workout?.name || 'Treino não encontrado' }}</div>
+          </div>
+          <div class="flex-row">
+            <button class="icon-btn danger" (click)="openDeleteLog(log)" title="Excluir"><span class="icon">🗑️</span></button>
+          </div>
+        </div>
+        <div class="note-content workout-exercises-small" *ngIf="log.workout?.exercises">
+          {{ log.workout.exercises }}
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="logs.length === 0">
       <div class="empty-state-icon">💪</div>
-      <p>Nenhum treino registrado ainda. Comece registrando seu primeiro treino acima!</p>
+      <p>Nenhum treino registrado ainda. Cadastre um treino acima e depois registre sua execução!</p>
     </div>
   </div>
 
@@ -98,7 +143,7 @@
   <div class="modal-backdrop" *ngIf="showDeleteModal">
     <div class="modal-card">
       <h3>Confirmar exclusão</h3>
-      <p>Tem certeza que deseja excluir este registro de treino?</p>
+      <p>Tem certeza que deseja excluir este {{ deleteType === 'workout' ? 'treino cadastrado' : 'registro de execução' }}?</p>
       <div class="modal-actions">
         <button class="btn-ghost" (click)="closeDeleteModal()">Cancelar</button>
         <button class="btn-submit danger" (click)="confirmDelete()">Excluir</button>

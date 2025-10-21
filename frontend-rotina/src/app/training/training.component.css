@@ -6,10 +6,11 @@
 .form-card { background: #fff; border: 1px solid rgba(44,62,80,0.04); padding: 1rem; border-radius: 10px; box-shadow: 0 6px 18px rgba(44,62,80,0.03); }
 .training-form .form-group { display:flex; flex-direction:column; margin-bottom:0.75rem; }
 .training-form label { font-size:0.85rem; color:var(--color-secondary-text); margin-bottom:0.35rem; }
-.training-form textarea, .training-form input { border:1px solid rgba(44,62,80,0.08); padding:0.6rem; border-radius:8px; font-family:var(--brand-font), sans-serif; }
+.training-form textarea, .training-form input, .training-form select { border:1px solid rgba(44,62,80,0.08); padding:0.6rem; border-radius:8px; font-family:var(--brand-font), sans-serif; }
 
 .btn-submit { background:var(--color-accent); color:#fff; border:none; padding:0.6rem 1rem; border-radius:8px; cursor:pointer; font-weight:600; }
 .btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(76,111,163,0.12); }
+.btn-ghost { background:transparent; border:1px solid rgba(44,62,80,0.1); color:var(--color-text); padding:0.6rem 1rem; border-radius:8px; cursor:pointer; }
 
 .stats-bar { display:flex; gap:1rem; }
 .stat-card { background:#fff; border:1px solid rgba(44,62,80,0.04); padding:0.75rem; border-radius:8px; min-width:120px; }
@@ -20,5 +21,29 @@
 @media (max-width:900px){ .notes-grid { grid-template-columns:1fr; } }
 .note-card { background:#fff; border:1px solid rgba(44,62,80,0.04); padding:0.9rem; border-radius:10px; }
 .note-date { font-weight:700; color:var(--color-accent); }
-.note-content { color:var(--color-secondary-text); }
+.note-content { color:var(--color-secondary-text); white-space: pre-wrap; }
 .empty-state { text-align:center; padding:2rem; background:#fff; border:1px dashed rgba(44,62,80,0.04); border-radius:10px; color:var(--color-secondary-text); }
+
+/* Replaces inline styles */
+.flex-row { display: flex; gap: 0.5rem; }
+.flex-1 { flex: 1; }
+.mt-2 { margin-top: 0.5rem; }
+.align-center { align-items: center; }
+.note-header { display: flex; align-items: center; gap: 0.5rem; }
+
+/* Workout specific styles */
+.workout-name { font-weight: 700; color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem; }
+.workout-name-small { font-weight: 600; color: var(--color-text); font-size: 0.95rem; margin-top: 0.25rem; }
+.workout-exercises { white-space: pre-wrap; color: var(--color-secondary-text); font-size: 0.9rem; line-height: 1.6; }
+.workout-exercises-small { white-space: pre-wrap; color: var(--color-secondary-text); font-size: 0.85rem; line-height: 1.5; margin-top: 0.5rem; }
+.section-spacing { margin-top: 2rem; }
+.icon-btn { background: transparent; border: none; cursor: pointer; padding: 0.25rem; }
+.icon-btn .icon { font-size: 1.1rem; }
+.icon-btn.danger:hover { opacity: 0.7; }
+
+/* Modal */
+.modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-card { background: #fff; padding: 1.5rem; border-radius: 10px; max-width: 400px; width: 90%; }
+.modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+.danger { background: #e74c3c !important; }
+.danger:hover { background: #c0392b !important; }

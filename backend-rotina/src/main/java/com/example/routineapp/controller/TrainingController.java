@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public class TrainingController {
 
     @GetMapping
     public List<TrainingNote> list() {
-        return repository.findAll();
+        return repository.findAllByOrderByDateDesc();
     }
 
     @GetMapping("/{id}")
@@ -29,7 +30,11 @@ public class TrainingController {
 
     @PostMapping
     public ResponseEntity<TrainingNote> create(@RequestBody TrainingNote note) {
-        if (note.getDate() == null || note.getNote() == null || note.getNote().isEmpty()) {
+        // Data padrão: hoje, se não vier do cliente
+        if (note.getDate() == null) {
+            note.setDate(LocalDate.now());
+        }
+        if (note.getNote() == null || note.getNote().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         TrainingNote saved = repository.save(note);
