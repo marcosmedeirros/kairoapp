@@ -45,67 +45,200 @@
       <span class="goal-count">{{ goals.length }}</span>
     </h3>
 
-    <div class="goals-grid" *ngIf="goals.length > 0">
-      <div class="goal-card" [ngClass]="g.type" *ngFor="let g of goals">
-
-        <!-- If this goal is being edited show the edit form -->
-        <div *ngIf="editingGoalId === g.id; else showGoal">
-          <div class="form-group">
-            <label>Descrição</label>
-            <textarea class="edit-input" [(ngModel)]="editedGoal.description" name="editDescription"></textarea>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Tipo</label>
-              <select class="edit-input" [(ngModel)]="editedGoal.type" name="editType">
-                <option value="WEEKLY">📅 Semanal</option>
-                <option value="MONTHLY">📆 Mensal</option>
-                <option value="YEARLY">📊 Anual</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Início</label>
-              <input class="edit-input" type="date" [(ngModel)]="editedGoal.startDate" name="editStart" />
-            </div>
-            <div class="form-group">
-              <label>Fim</label>
-              <input class="edit-input" type="date" [(ngModel)]="editedGoal.endDate" name="editEnd" />
-            </div>
-          </div>
-          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-            <button class="btn-submit" (click)="saveEdit(g)">Salvar</button>
-            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
-          </div>
-        </div>
-
-        <!-- Read-only view -->
-        <ng-template #showGoal>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="goal-type-badge">{{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}</span>
-            <div style="display:flex; gap:0.5rem;">
-              <button class="icon-btn" (click)="startEdit(g)" title="Editar"><span class="icon">✏️</span></button>
-              <button class="icon-btn danger" (click)="openDeleteModal(g)" title="Excluir"><span class="icon">🗑️</span></button>
-            </div>
-          </div>
-          <div class="goal-description">{{ g.description }}</div>
-          <div class="goal-dates" *ngIf="g.startDate || g.endDate">
-            <div class="goal-date-item" *ngIf="g.startDate">
-              <span class="goal-date-label">Início</span>
-              <span class="goal-date-value">{{ g.startDate | date:'dd/MM/yyyy' }}</span>
-            </div>
-            <div class="goal-date-item" *ngIf="g.endDate">
-              <span class="goal-date-label">Conclusão</span>
-              <span class="goal-date-value">{{ g.endDate | date:'dd/MM/yyyy' }}</span>
-            </div>
-          </div>
-        </ng-template>
-
-      </div>
-    </div>
-
     <div class="empty-state" *ngIf="goals.length === 0">
       <div class="empty-state-icon">🎯</div>
       <p>Nenhuma meta definida ainda. Crie sua primeira meta acima!</p>
+    </div>
+
+    <!-- Three Column Layout -->
+    <div class="goals-columns" *ngIf="goals.length > 0">
+      
+      <!-- Column 1: Overdue -->
+      <div class="goal-column overdue-column">
+        <div class="column-header overdue">
+          <span class="column-icon">⚠️</span>
+          <span class="column-title">Vencidas</span>
+          <span class="column-count">{{ overdue.length }}</span>
+        </div>
+        <div class="goal-card overdue" *ngFor="let g of overdue">
+          <div *ngIf="editingGoalId === g.id; else showGoalOverdue">
+            <div class="form-group">
+              <label>Descrição</label>
+                <textarea class="edit-input" [(ngModel)]="editedGoal.description" name="editDescription" title="Descrição da meta" placeholder="Descreva sua meta"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo</label>
+                  <select class="edit-input" [(ngModel)]="editedGoal.type" name="editType" title="Tipo da meta">
+                  <option value="WEEKLY">📅 Semanal</option>
+                  <option value="MONTHLY">📆 Mensal</option>
+                  <option value="YEARLY">📊 Anual</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Início</label>
+                  <input class="edit-input" type="date" [(ngModel)]="editedGoal.startDate" name="editStart" title="Data de início" />
+              </div>
+              <div class="form-group">
+                <label>Fim</label>
+                  <input class="edit-input" type="date" [(ngModel)]="editedGoal.endDate" name="editEnd" title="Data de conclusão" />
+              </div>
+            </div>
+            <div class="flex-row mt-2">
+              <button class="btn-submit" (click)="saveEdit(g)">Salvar</button>
+              <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+            </div>
+          </div>
+          <ng-template #showGoalOverdue>
+            <div class="goal-header">
+              <span class="goal-type-badge">{{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}</span>
+              <div class="flex-row">
+                <button class="icon-btn" (click)="startEdit(g)" title="Editar"><span class="icon">✏️</span></button>
+                <button class="icon-btn danger" (click)="openDeleteModal(g)" title="Excluir"><span class="icon">🗑️</span></button>
+              </div>
+            </div>
+            <div class="goal-description">{{ g.description }}</div>
+            <div class="goal-dates" *ngIf="g.startDate || g.endDate">
+              <div class="goal-date-item" *ngIf="g.startDate">
+                <span class="goal-date-label">Início</span>
+                <span class="goal-date-value">{{ g.startDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="goal-date-item" *ngIf="g.endDate">
+                <span class="goal-date-label">Conclusão</span>
+                <span class="goal-date-value">{{ g.endDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <div class="empty-column" *ngIf="overdue.length === 0">
+          <p>✅ Nenhuma meta vencida</p>
+        </div>
+      </div>
+
+      <!-- Column 2: In Progress -->
+      <div class="goal-column progress-column">
+        <div class="column-header progress">
+          <span class="column-icon">🔥</span>
+          <span class="column-title">Em Andamento</span>
+          <span class="column-count">{{ inProgress.length }}</span>
+        </div>
+        <div class="goal-card progress" *ngFor="let g of inProgress">
+          <div *ngIf="editingGoalId === g.id; else showGoalProgress">
+            <div class="form-group">
+              <label>Descrição</label>
+                <textarea class="edit-input" [(ngModel)]="editedGoal.description" name="editDescription" title="Descrição da meta" placeholder="Descreva sua meta"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo</label>
+                  <select class="edit-input" [(ngModel)]="editedGoal.type" name="editType" title="Tipo da meta">
+                  <option value="WEEKLY">📅 Semanal</option>
+                  <option value="MONTHLY">📆 Mensal</option>
+                  <option value="YEARLY">📊 Anual</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Início</label>
+                  <input class="edit-input" type="date" [(ngModel)]="editedGoal.startDate" name="editStart" title="Data de início" />
+              </div>
+              <div class="form-group">
+                <label>Fim</label>
+                  <input class="edit-input" type="date" [(ngModel)]="editedGoal.endDate" name="editEnd" title="Data de conclusão" />
+              </div>
+            </div>
+            <div class="flex-row mt-2">
+              <button class="btn-submit" (click)="saveEdit(g)">Salvar</button>
+              <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+            </div>
+          </div>
+          <ng-template #showGoalProgress>
+            <div class="goal-header">
+              <span class="goal-type-badge">{{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}</span>
+              <div class="flex-row">
+                <button class="icon-btn" (click)="startEdit(g)" title="Editar"><span class="icon">✏️</span></button>
+                <button class="icon-btn danger" (click)="openDeleteModal(g)" title="Excluir"><span class="icon">🗑️</span></button>
+              </div>
+            </div>
+            <div class="goal-description">{{ g.description }}</div>
+            <div class="goal-dates" *ngIf="g.startDate || g.endDate">
+              <div class="goal-date-item" *ngIf="g.startDate">
+                <span class="goal-date-label">Início</span>
+                <span class="goal-date-value">{{ g.startDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="goal-date-item" *ngIf="g.endDate">
+                <span class="goal-date-label">Conclusão</span>
+                <span class="goal-date-value">{{ g.endDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <div class="empty-column" *ngIf="inProgress.length === 0">
+          <p>💭 Nenhuma meta em andamento</p>
+        </div>
+      </div>
+
+      <!-- Column 3: Upcoming -->
+      <div class="goal-column upcoming-column">
+        <div class="column-header upcoming">
+          <span class="column-icon">📅</span>
+          <span class="column-title">Futuras</span>
+          <span class="column-count">{{ upcoming.length }}</span>
+        </div>
+        <div class="goal-card upcoming" *ngFor="let g of upcoming">
+          <div *ngIf="editingGoalId === g.id; else showGoalUpcoming">
+            <div class="form-group">
+              <label>Descrição</label>
+                <textarea class="edit-input" [(ngModel)]="editedGoal.description" name="editDescription" title="Descrição da meta" placeholder="Descreva sua meta"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo</label>
+                  <select class="edit-input" [(ngModel)]="editedGoal.type" name="editType" title="Tipo da meta">
+                  <option value="WEEKLY">📅 Semanal</option>
+                  <option value="MONTHLY">📆 Mensal</option>
+                  <option value="YEARLY">📊 Anual</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Início</label>
+                  <input class="edit-input" type="date" [(ngModel)]="editedGoal.startDate" name="editStart" title="Data de início" />
+              </div>
+              <div class="form-group">
+                <label>Fim</label>
+                  <input class="edit-input" type="date" [(ngModel)]="editedGoal.endDate" name="editEnd" title="Data de conclusão" />
+              </div>
+            </div>
+            <div class="flex-row mt-2">
+              <button class="btn-submit" (click)="saveEdit(g)">Salvar</button>
+              <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+            </div>
+          </div>
+          <ng-template #showGoalUpcoming>
+            <div class="goal-header">
+              <span class="goal-type-badge">{{ g.type === 'WEEKLY' ? '📅 Semanal' : g.type === 'MONTHLY' ? '📆 Mensal' : '📊 Anual' }}</span>
+              <div class="flex-row">
+                <button class="icon-btn" (click)="startEdit(g)" title="Editar"><span class="icon">✏️</span></button>
+                <button class="icon-btn danger" (click)="openDeleteModal(g)" title="Excluir"><span class="icon">🗑️</span></button>
+              </div>
+            </div>
+            <div class="goal-description">{{ g.description }}</div>
+            <div class="goal-dates" *ngIf="g.startDate || g.endDate">
+              <div class="goal-date-item" *ngIf="g.startDate">
+                <span class="goal-date-label">Início</span>
+                <span class="goal-date-value">{{ g.startDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="goal-date-item" *ngIf="g.endDate">
+                <span class="goal-date-label">Conclusão</span>
+                <span class="goal-date-value">{{ g.endDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <div class="empty-column" *ngIf="upcoming.length === 0">
+          <p>📆 Nenhuma meta futura</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

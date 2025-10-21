@@ -26,12 +26,60 @@ export class GoalsComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    // Define data de início padrão como hoje
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    const d = String(today.getDate()).padStart(2, '0');
+    this.newGoal.startDate = `${y}-${m}-${d}`;
+    
     this.fetchGoals();
   }
 
   fetchGoals() {
     this.http.get<any[]>('/api/goals').subscribe((data) => {
       this.goals = data;
+    });
+  }
+
+  // Classificação das metas
+  get overdue(): any[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return this.goals.filter(g => {
+      if (!g.endDate) return false;
+      const end = new Date(g.endDate);
+      end.setHours(0, 0, 0, 0);
+      return end < today;
+    });
+  }
+
+  get inProgress(): any[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return this.goals.filter(g => {
+      const start = g.startDate ? new Date(g.startDate) : null;
+      const end = g.endDate ? new Date(g.endDate) : null;
+      
+      if (start) start.setHours(0, 0, 0, 0);
+      if (end) end.setHours(0, 0, 0, 0);
+
+      // Em andamento: já começou (ou sem data início) e não venceu
+      const hasStarted = !start || start <= today;
+      const notExpired = !end || end >= today;
+      
+      return hasStarted && notExpired;
+    });
+  }
+
+  get upcoming(): any[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return this.goals.filter(g => {
+      if (!g.startDate) return false;
+      const start = new Date(g.startDate);
+      start.setHours(0, 0, 0, 0);
+      return start > today;
     });
   }
 

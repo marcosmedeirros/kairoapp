@@ -59,25 +59,91 @@
 }
 
 .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(76,111,163,0.12); }
+.btn-ghost { background: transparent; border: 1px solid rgba(44,62,80,0.1); color: var(--color-text); padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; }
 
 .goals-section {
   display: flex;
   flex-direction: column;
 }
 
-.goals-grid {
+/* Three Column Layout */
+.goals-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
+.goal-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.column-header.overdue {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: #fff;
+}
+
+.column-header.progress {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: #fff;
+}
+
+.column-header.upcoming {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  color: #fff;
+}
+
+.column-icon {
+  font-size: 1.2rem;
+}
+
+.column-title {
+  flex: 1;
+}
+
+.column-count {
+  background: rgba(255,255,255,0.25);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
 .goal-card {
-  background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+  background: #fff;
   border: 1px solid rgba(44,62,80,0.04);
   padding: 0.9rem;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
+}
+
+.goal-card.overdue {
+  border-left: 3px solid #e74c3c;
+}
+
+.goal-card.progress {
+  border-left: 3px solid #3498db;
+}
+
+.goal-card.upcoming {
+  border-left: 3px solid #95a5a6;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .goal-type-badge {
@@ -91,23 +157,39 @@
   margin-top: 0.5rem;
   color: var(--color-text);
   font-weight: 600;
+  word-break: break-word;
 }
 
 .goal-dates {
   margin-top: 0.6rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
-  color: var(--color-secondary-text);
-  font-size: 0.85rem;
 }
 
-.goal-icon {
-  position: absolute;
-  right: 12px;
-  bottom: 10px;
-  font-size: 1.4rem;
-  opacity: 0.9;
+.goal-date-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.goal-date-label {
+  font-size: 0.75rem;
+  color: var(--color-secondary-text);
+  text-transform: uppercase;
+}
+
+.goal-date-value {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.empty-column {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--color-secondary-text);
+  font-size: 0.9rem;
 }
 
 .empty-state {
@@ -119,12 +201,33 @@
   color: var(--color-secondary-text);
 }
 
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Common styles */
+.flex-row { display: flex; gap: 0.5rem; }
+.mt-2 { margin-top: 0.5rem; }
+.icon-btn { background: transparent; border: none; cursor: pointer; padding: 0.25rem; }
+.icon-btn .icon { font-size: 1.1rem; }
+.icon-btn.danger:hover { opacity: 0.7; }
+.edit-input { border: 1px solid rgba(44,62,80,0.08); padding: 0.5rem; border-radius: 6px; font-family: var(--brand-font), sans-serif; width: 100%; }
+.form-row { display: flex; gap: 0.75rem; }
+.form-group { display: flex; flex-direction: column; margin-bottom: 0.5rem; flex: 1; }
+.form-group label { font-size: 0.8rem; color: var(--color-secondary-text); margin-bottom: 0.25rem; }
+
+/* Modal */
+.modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-card { background: #fff; padding: 1.5rem; border-radius: 10px; max-width: 400px; width: 90%; }
+.modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+.danger { background: #e74c3c !important; }
+.danger:hover { background: #c0392b !important; }
+
 @media (max-width: 1000px) {
-  .goals-grid { grid-template-columns: repeat(2, 1fr); }
+  .goals-columns { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
-  .goals-grid { grid-template-columns: 1fr; }
   .main-content { padding: 0.5rem; }
 }
-
