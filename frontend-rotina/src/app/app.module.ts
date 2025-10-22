@@ -10,6 +10,9 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { DietComponent } from './diet/diet.component';
 import { TrainingComponent } from './training/training.component';
 import { GoalsComponent } from './goals/goals.component';
+import { FinancesComponent } from './finances/finances.component';
+import { DatePtPipe } from './pipes/date-pt.pipe';
+import { MonthNamePtPipe } from './pipes/month-name-pt.pipe';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -17,7 +20,8 @@ const routes: Routes = [
   { path: 'calendar', component: CalendarComponent },
   { path: 'diet', component: DietComponent },
   { path: 'training', component: TrainingComponent },
-  { path: 'goals', component: GoalsComponent }
+  { path: 'goals', component: GoalsComponent },
+  { path: 'finances', component: FinancesComponent }
 ];
 
 @NgModule({
@@ -27,7 +31,10 @@ const routes: Routes = [
     CalendarComponent,
     DietComponent,
     TrainingComponent,
-    GoalsComponent
+    GoalsComponent,
+    FinancesComponent,
+    DatePtPipe,
+    MonthNamePtPipe
   ],
   imports: [
     BrowserModule,

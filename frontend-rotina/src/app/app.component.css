@@ -176,3 +176,6 @@ nav a.active {
   color: var(--color-accent);
   font-weight: 700;
 }
+
+/* spacing helpers */
+.spacer-section { padding: 2rem 0; }

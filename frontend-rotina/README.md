@@ -81,3 +81,4 @@ Este projeto foi construído para servir de base. Algumas ideias para evoluí‑
 * Melhorar a interface com design responsivo e feedbacks visuais.
 * Implementar armazenamento de arquivos (por exemplo, anexar fotos de refeições ou treinos).
 * Criar testes automatizados para o backend e para o frontend.
+* Proximos passos ROTINA, DIARIO e FINANÇAS
