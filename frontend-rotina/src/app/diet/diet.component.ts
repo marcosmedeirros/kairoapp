@@ -8,80 +8,186 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DietComponent implements OnInit {
   logs: any[] = [];
-  newLog = {
-    date: '',
-    breakfast: '',
-    lunch: '',
-    dinner: '',
-    snacks: '',
-    notes: ''
-  };
+  
+  // Calendário mensal
+  currentMonth: number = 0;
+  currentYear: number = 0;
+  weeks: Array<Array<{ day: number; dateStr: string; inMonth: boolean }>> = [];
+  monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-  // editing state
-  editingLogId: number | null = null;
+  // Modal do dia
+  showDayModal: boolean = false;
+  selectedDate: string | null = null;
+  selectedLog: any = null;
+  isEditing: boolean = false;
   editedLog: any = null;
 
-  // deletion modal state
+  // Modal de confirmação de exclusão
   showDeleteModal: boolean = false;
   logToDelete: any = null;
+
+  // Receitas
+  recipes: any[] = [];
+  newRecipe = { name: '', description: '' };
+  editingRecipeId: number | null = null;
+  editedRecipe: any = null;
+  showRecipeDeleteModal: boolean = false;
+  recipeToDelete: any = null;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchLogs();
-    // Prefill new log date with today
     const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    this.newLog.date = `${y}-${m}-${day}`;
+    this.currentMonth = now.getMonth();
+    this.currentYear = now.getFullYear();
+    this.fetchLogs();
+    this.fetchRecipes();
   }
 
   fetchLogs() {
     this.http.get<any[]>('/api/diet').subscribe((data) => {
-      this.logs = data;
+      this.logs = data || [];
+      this.buildCalendar();
     });
   }
 
-  addLog() {
-    this.http.post('/api/diet', this.newLog).subscribe(() => {
-      this.newLog = { date: '', breakfast: '', lunch: '', dinner: '', snacks: '', notes: '' };
-      this.fetchLogs();
-    }, (err) => {
-      console.error('Failed to add diet log', err);
+  fetchRecipes() {
+    this.http.get<any[]>('/api/recipes').subscribe((data) => {
+      this.recipes = data || [];
     });
   }
 
-  startEdit(log: any) {
-    this.editingLogId = log.id;
+  // ===== CALENDÁRIO =====
+  buildCalendar() {
+    const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+    const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startWeekday = firstDay.getDay(); // 0=Sun, 1=Mon, ...
+
+    const weeks: Array<Array<{ day: number; dateStr: string; inMonth: boolean }>> = [];
+    let week: Array<{ day: number; dateStr: string; inMonth: boolean }> = [];
+
+    // Fill leading empty days
+    for (let i = 0; i < startWeekday; i++) {
+      week.push({ day: 0, dateStr: '', inMonth: false });
+    }
+
+    // Fill days of the month
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = this.toIsoDate(new Date(this.currentYear, this.currentMonth, d));
+      week.push({ day: d, dateStr, inMonth: true });
+      if (week.length === 7) {
+        weeks.push(week);
+        week = [];
+      }
+    }
+
+    // Fill trailing empty days
+    if (week.length > 0) {
+      while (week.length < 7) {
+        week.push({ day: 0, dateStr: '', inMonth: false });
+      }
+      weeks.push(week);
+    }
+
+    this.weeks = weeks;
+  }
+
+  prevMonth() {
+    this.currentMonth--;
+    if (this.currentMonth < 0) {
+      this.currentMonth = 11;
+      this.currentYear--;
+    }
+    this.buildCalendar();
+  }
+
+  nextMonth() {
+    this.currentMonth++;
+    if (this.currentMonth > 11) {
+      this.currentMonth = 0;
+      this.currentYear++;
+    }
+    this.buildCalendar();
+  }
+
+  hasLogOnDate(dateStr: string): boolean {
+    return this.logs.some(log => log.date === dateStr);
+  }
+
+  onDayClick(cell: any) {
+    if (!cell.inMonth) return;
+    this.selectedDate = cell.dateStr;
+    this.selectedLog = this.logs.find(log => log.date === cell.dateStr) || null;
+    this.isEditing = false;
+    this.editedLog = null;
+    this.showDayModal = true;
+  }
+
+  closeDayModal() {
+    this.showDayModal = false;
+    this.selectedDate = null;
+    this.selectedLog = null;
+    this.isEditing = false;
+    this.editedLog = null;
+  }
+
+  // ===== CRUD NO MODAL =====
+  startNewLog() {
+    this.isEditing = true;
     this.editedLog = {
-      date: this.formatDateForInput(log.date),
-      breakfast: log.breakfast || '',
-      lunch: log.lunch || '',
-      dinner: log.dinner || '',
-      snacks: log.snacks || '',
-      notes: log.notes || ''
+      date: this.selectedDate,
+      breakfast: '',
+      lunch: '',
+      dinner: '',
+      snacks: '',
+      notes: ''
+    };
+  }
+
+  startEdit() {
+    if (!this.selectedLog) return;
+    this.isEditing = true;
+    this.editedLog = {
+      date: this.selectedLog.date,
+      breakfast: this.selectedLog.breakfast || '',
+      lunch: this.selectedLog.lunch || '',
+      dinner: this.selectedLog.dinner || '',
+      snacks: this.selectedLog.snacks || '',
+      notes: this.selectedLog.notes || ''
     };
   }
 
   cancelEdit() {
-    this.editingLogId = null;
+    this.isEditing = false;
     this.editedLog = null;
   }
 
-  saveEdit(log: any) {
-    const payload: any = { ...this.editedLog };
-    this.http.put(`/api/diet/${log.id}`, payload).subscribe(() => {
-      this.editingLogId = null;
-      this.editedLog = null;
-      this.fetchLogs();
-    }, (err) => {
-      console.error('Failed to update diet log', err);
-    });
+  saveLog() {
+    if (!this.editedLog) return;
+    
+    if (this.selectedLog) {
+      // Update existing
+      this.http.put(`/api/diet/${this.selectedLog.id}`, this.editedLog).subscribe(() => {
+        this.fetchLogs();
+        this.closeDayModal();
+      }, (err) => {
+        console.error('Failed to update diet log', err);
+      });
+    } else {
+      // Create new
+      this.http.post('/api/diet', this.editedLog).subscribe(() => {
+        this.fetchLogs();
+        this.closeDayModal();
+      }, (err) => {
+        console.error('Failed to add diet log', err);
+      });
+    }
   }
 
-  openDeleteModal(log: any) {
-    this.logToDelete = log;
+  openDeleteModal() {
+    if (!this.selectedLog) return;
+    this.logToDelete = this.selectedLog;
     this.showDeleteModal = true;
   }
 
@@ -94,6 +200,7 @@ export class DietComponent implements OnInit {
     if (!this.logToDelete) return;
     this.http.delete(`/api/diet/${this.logToDelete.id}`).subscribe(() => {
       this.closeDeleteModal();
+      this.closeDayModal();
       this.fetchLogs();
     }, (err) => {
       console.error('Failed to delete diet log', err);
@@ -101,13 +208,71 @@ export class DietComponent implements OnInit {
     });
   }
 
-  private formatDateForInput(input: any): string {
-    if (!input) return '';
-    const d = new Date(input);
-    if (isNaN(d.getTime())) return '';
+  // ===== RECEITAS =====
+  addRecipe() {
+    if (!this.newRecipe.name.trim()) return;
+    this.http.post('/api/recipes', this.newRecipe).subscribe(() => {
+      this.newRecipe = { name: '', description: '' };
+      this.fetchRecipes();
+    }, (err) => {
+      console.error('Failed to add recipe', err);
+    });
+  }
+
+  startEditRecipe(recipe: any) {
+    this.editingRecipeId = recipe.id;
+    this.editedRecipe = { ...recipe };
+  }
+
+  saveEditRecipe() {
+    if (!this.editedRecipe) return;
+    this.http.put(`/api/recipes/${this.editingRecipeId}`, this.editedRecipe).subscribe(() => {
+      this.editingRecipeId = null;
+      this.editedRecipe = null;
+      this.fetchRecipes();
+    }, (err) => {
+      console.error('Failed to update recipe', err);
+    });
+  }
+
+  cancelEditRecipe() {
+    this.editingRecipeId = null;
+    this.editedRecipe = null;
+  }
+
+  openRecipeDeleteModal(recipe: any) {
+    this.recipeToDelete = recipe;
+    this.showRecipeDeleteModal = true;
+  }
+
+  closeRecipeDeleteModal() {
+    this.recipeToDelete = null;
+    this.showRecipeDeleteModal = false;
+  }
+
+  confirmRecipeDelete() {
+    if (!this.recipeToDelete) return;
+    this.http.delete(`/api/recipes/${this.recipeToDelete.id}`).subscribe(() => {
+      this.closeRecipeDeleteModal();
+      this.fetchRecipes();
+    }, (err) => {
+      console.error('Failed to delete recipe', err);
+      this.closeRecipeDeleteModal();
+    });
+  }
+
+  // ===== UTILS =====
+  private toIsoDate(d: Date): string {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
     return `${y}-${m}-${day}`;
+  }
+
+  private formatDateForInput(input: any): string {
+    if (!input) return '';
+    const d = new Date(input);
+    if (isNaN(d.getTime())) return '';
+    return this.toIsoDate(d);
   }
 }

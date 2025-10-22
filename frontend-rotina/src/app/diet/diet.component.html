@@ -1,173 +1,208 @@
 <div class="diet-container">
   <div class="page-header">
     <h2>🍽️ Diário Alimentar</h2>
-    <p class="page-subtitle">Registre suas refeições e mantenha uma alimentação saudável</p>
+    <p class="page-subtitle">Clique em um dia para ver ou registrar suas refeições</p>
   </div>
 
-  <!-- Form Section -->
-  <div class="form-card">
-    <h3>➕ Novo Registro de Alimentação</h3>
-    <form (ngSubmit)="addLog()" class="diet-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="date">📅 Data *</label>
-          <input id="date" [(ngModel)]="newLog.date" name="date" type="date" required />
+  <!-- Calendário Mensal -->
+  <div class="calendar-card">
+    <div class="calendar-header">
+      <button class="nav-btn" (click)="prevMonth()" title="Mês anterior">◀</button>
+      <h3>{{ monthNames[currentMonth] }} {{ currentYear }}</h3>
+      <button class="nav-btn" (click)="nextMonth()" title="Próximo mês">▶</button>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="weekday-header">Dom</div>
+      <div class="weekday-header">Seg</div>
+      <div class="weekday-header">Ter</div>
+      <div class="weekday-header">Qua</div>
+      <div class="weekday-header">Qui</div>
+      <div class="weekday-header">Sex</div>
+      <div class="weekday-header">Sáb</div>
+
+      <ng-container *ngFor="let week of weeks">
+        <div
+          *ngFor="let cell of week"
+          class="calendar-day"
+          [class.in-month]="cell.inMonth"
+          [class.has-log]="hasLogOnDate(cell.dateStr)"
+          (click)="onDayClick(cell)"
+          [attr.title]="cell.inMonth ? 'Dia ' + cell.day : ''">
+          <span class="day-number">{{ cell.day || '' }}</span>
+          <span class="log-indicator" *ngIf="hasLogOnDate(cell.dateStr)">🍽️</span>
         </div>
-      </div>
-
-      <div class="meals-section">
-        <h4>🍴 Refeições do Dia</h4>
-        <div class="meals-grid">
-          <div class="form-group">
-            <label for="breakfast">
-              <span class="meal-icon">☕</span>
-              Café da Manhã
-            </label>
-            <textarea id="breakfast" [(ngModel)]="newLog.breakfast" name="breakfast" placeholder="Ex: Pão integral, ovo..."></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="lunch">
-              <span class="meal-icon">🍚</span>
-              Almoço
-            </label>
-            <textarea id="lunch" [(ngModel)]="newLog.lunch" name="lunch" placeholder="Ex: Arroz, feijão, frango..."></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="dinner">
-              <span class="meal-icon">🥗</span>
-              Jantar
-            </label>
-            <textarea id="dinner" [(ngModel)]="newLog.dinner" name="dinner" placeholder="Ex: Salada, peixe..."></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="snacks">
-              <span class="meal-icon">🍎</span>
-              Lanches
-            </label>
-            <textarea id="snacks" [(ngModel)]="newLog.snacks" name="snacks" placeholder="Ex: Frutas, iogurte..."></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="notes">📝 Observações</label>
-          <textarea id="notes" [(ngModel)]="newLog.notes" name="notes" placeholder="Anotações adicionais sobre sua alimentação..."></textarea>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-submit">💾 Registrar Alimentação</button>
-    </form>
+      </ng-container>
+    </div>
   </div>
 
-  <!-- Logs Section -->
-  <div class="logs-section">
-    <h3>
-      Histórico de Alimentação
-      <span class="log-count">{{ logs.length }}</span>
-    </h3>
+  <!-- Modal do Dia -->
+  <div class="modal-backdrop" *ngIf="showDayModal" (click)="closeDayModal()">
+    <div class="modal-card day-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>📅 {{ selectedDate | datePt }}</h3>
+        <button class="close-btn" (click)="closeDayModal()" title="Fechar">✖</button>
+      </div>
 
-    <div class="logs-grid" *ngIf="logs.length > 0">
-      <div class="log-card" *ngFor="let log of logs">
-
-        <!-- If editing show form -->
-        <div *ngIf="editingLogId === log.id; else showLog">
-          <div class="form-group">
-            <label>Data</label>
-            <input class="edit-input" type="date" [(ngModel)]="editedLog.date" name="editDate" />
-          </div>
-
-          <div class="meals-grid">
-            <div class="form-group">
-              <label>Café</label>
-              <textarea class="edit-input" [(ngModel)]="editedLog.breakfast" name="editBreakfast"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Almoço</label>
-              <textarea class="edit-input" [(ngModel)]="editedLog.lunch" name="editLunch"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Jantar</label>
-              <textarea class="edit-input" [(ngModel)]="editedLog.dinner" name="editDinner"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Lanches</label>
-              <textarea class="edit-input" [(ngModel)]="editedLog.snacks" name="editSnacks"></textarea>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Observações</label>
-            <textarea class="edit-input" [(ngModel)]="editedLog.notes" name="editNotes"></textarea>
-          </div>
-
-          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-            <button class="btn-submit" (click)="saveEdit(log)">Salvar</button>
-            <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
-          </div>
-        </div>
-
-        <ng-template #showLog>
-          <div class="log-header">
-            <div class="log-date">{{ log.date | date:'dd/MM/yyyy' }}</div>
-            <div style="margin-left:auto; display:flex; gap:0.5rem;">
-              <button class="icon-btn" (click)="startEdit(log)" title="Editar"><span class="icon">✏️</span></button>
-              <button class="icon-btn danger" (click)="openDeleteModal(log)" title="Excluir"><span class="icon">🗑️</span></button>
-            </div>
-          </div>
-
+      <div class="modal-body">
+        <!-- Modo Visualização -->
+        <div *ngIf="!isEditing && selectedLog">
           <div class="meals-list">
-            <div class="meal-item" *ngIf="log.breakfast">
+            <div class="meal-item" *ngIf="selectedLog.breakfast">
               <div class="meal-label">☕ Café da Manhã</div>
-              <div class="meal-content">{{ log.breakfast }}</div>
+              <div class="meal-content">{{ selectedLog.breakfast }}</div>
             </div>
 
-            <div class="meal-item" *ngIf="log.lunch">
+            <div class="meal-item" *ngIf="selectedLog.lunch">
               <div class="meal-label">🍚 Almoço</div>
-              <div class="meal-content">{{ log.lunch }}</div>
+              <div class="meal-content">{{ selectedLog.lunch }}</div>
             </div>
 
-            <div class="meal-item" *ngIf="log.dinner">
+            <div class="meal-item" *ngIf="selectedLog.dinner">
               <div class="meal-label">🥗 Jantar</div>
-              <div class="meal-content">{{ log.dinner }}</div>
+              <div class="meal-content">{{ selectedLog.dinner }}</div>
             </div>
 
-            <div class="meal-item" *ngIf="log.snacks">
+            <div class="meal-item" *ngIf="selectedLog.snacks">
               <div class="meal-label">🍎 Lanches</div>
-              <div class="meal-content">{{ log.snacks }}</div>
-            </div>
-
-            <div class="meal-item" *ngIf="!log.breakfast && !log.lunch && !log.dinner && !log.snacks">
-              <div class="meal-content meal-empty">Nenhuma refeição registrada</div>
+              <div class="meal-content">{{ selectedLog.snacks }}</div>
             </div>
           </div>
 
-          <div class="notes-section" *ngIf="log.notes">
+          <div class="notes-section" *ngIf="selectedLog.notes">
             <div class="notes-label">📝 Observações</div>
-            <div class="notes-content">{{ log.notes }}</div>
+            <div class="notes-content">{{ selectedLog.notes }}</div>
           </div>
-        </ng-template>
 
+          <div class="modal-actions">
+            <button class="btn-edit" (click)="startEdit()">✏️ Editar</button>
+            <button class="btn-delete" (click)="openDeleteModal()">🗑️ Excluir</button>
+          </div>
+        </div>
+
+        <!-- Sem registro -->
+        <div *ngIf="!isEditing && !selectedLog" class="empty-day">
+          <p>Nenhuma refeição registrada neste dia.</p>
+          <button class="btn-primary" (click)="startNewLog()">➕ Registrar Refeições</button>
+        </div>
+
+        <!-- Modo Edição/Criação -->
+        <div *ngIf="isEditing" class="edit-form">
+          <div class="form-group">
+            <label for="breakfast">☕ Café da Manhã</label>
+            <textarea id="breakfast" [(ngModel)]="editedLog.breakfast" placeholder="Ex: Pão integral, ovo..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="lunch">🍚 Almoço</label>
+            <textarea id="lunch" [(ngModel)]="editedLog.lunch" placeholder="Ex: Arroz, feijão, frango..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dinner">🥗 Jantar</label>
+            <textarea id="dinner" [(ngModel)]="editedLog.dinner" placeholder="Ex: Salada, peixe..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="snacks">🍎 Lanches</label>
+            <textarea id="snacks" [(ngModel)]="editedLog.snacks" placeholder="Ex: Frutas, iogurte..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">📝 Observações</label>
+            <textarea id="notes" [(ngModel)]="editedLog.notes" placeholder="Anotações adicionais..."></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-primary" (click)="saveLog()">💾 Salvar</button>
+            <button class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="empty-state" *ngIf="logs.length === 0">
-      <div class="empty-state-icon">🍽️</div>
-      <p>Nenhum registro de alimentação ainda. Comece registrando suas refeições acima!</p>
     </div>
   </div>
 
-  <!-- Delete Confirmation Modal -->
-  <div class="modal-backdrop" *ngIf="showDeleteModal">
-    <div class="modal-card">
+  <!-- Modal de Confirmação de Exclusão -->
+  <div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="modal-card confirm-modal" (click)="$event.stopPropagation()">
       <h3>Confirmar exclusão</h3>
       <p>Tem certeza que deseja excluir este registro de alimentação?</p>
       <div class="modal-actions">
-        <button class="btn-ghost" (click)="closeDeleteModal()">Cancelar</button>
-        <button class="btn-submit danger" (click)="confirmDelete()">Excluir</button>
+        <button class="btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn-delete" (click)="confirmDelete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção de Receitas -->
+  <div class="recipes-section">
+    <div class="section-header">
+      <h3>📖 Minhas Receitas</h3>
+      <p class="section-subtitle">Salve suas receitas favoritas para consultar quando precisar</p>
+    </div>
+
+    <!-- Formulário de Nova Receita -->
+    <div class="recipe-form-card">
+      <h4>➕ Adicionar Receita</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="recipe-name">Nome da Receita</label>
+          <input type="text" id="recipe-name" [(ngModel)]="newRecipe.name" placeholder="Ex: Bolo de Cenoura">
+        </div>
+        <div class="form-group">
+          <label for="recipe-desc">Descrição / Ingredientes</label>
+          <textarea id="recipe-desc" [(ngModel)]="newRecipe.description" placeholder="Descreva os ingredientes e modo de preparo..."></textarea>
+        </div>
+        <button class="btn-primary" (click)="addRecipe()">💾 Salvar Receita</button>
+      </div>
+    </div>
+
+    <!-- Lista de Receitas -->
+    <div class="recipes-list" *ngIf="recipes.length > 0">
+      <div class="recipe-card" *ngFor="let recipe of recipes">
+        <!-- Modo Visualização -->
+        <div *ngIf="editingRecipeId !== recipe.id">
+          <div class="recipe-header">
+            <h4>{{ recipe.name }}</h4>
+            <div class="recipe-actions">
+              <button class="icon-btn edit" (click)="startEditRecipe(recipe)" title="Editar">✏️</button>
+              <button class="icon-btn delete" (click)="openRecipeDeleteModal(recipe)" title="Excluir">🗑️</button>
+            </div>
+          </div>
+          <p class="recipe-description">{{ recipe.description || 'Sem descrição' }}</p>
+        </div>
+
+        <!-- Modo Edição -->
+        <div *ngIf="editingRecipeId === recipe.id" class="edit-recipe-form">
+          <div class="form-group">
+            <label>Nome da Receita</label>
+            <input type="text" [(ngModel)]="editedRecipe.name" placeholder="Nome da receita">
+          </div>
+          <div class="form-group">
+            <label>Descrição / Ingredientes</label>
+            <textarea [(ngModel)]="editedRecipe.description" placeholder="Descrição e ingredientes"></textarea>
+          </div>
+          <div class="recipe-actions">
+            <button class="icon-btn save" (click)="saveEditRecipe()" title="Salvar">✅</button>
+            <button class="icon-btn cancel" (click)="cancelEditRecipe()" title="Cancelar">❌</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-recipes" *ngIf="recipes.length === 0">
+      <p>Nenhuma receita cadastrada ainda.</p>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação de Exclusão de Receita -->
+  <div class="modal-backdrop" *ngIf="showRecipeDeleteModal" (click)="closeRecipeDeleteModal()">
+    <div class="modal-card confirm-modal" (click)="$event.stopPropagation()">
+      <h3>Confirmar exclusão</h3>
+      <p>Tem certeza que deseja excluir esta receita?</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeRecipeDeleteModal()">Cancelar</button>
+        <button class="btn-delete" (click)="confirmRecipeDelete()">Excluir</button>
       </div>
     </div>
   </div>

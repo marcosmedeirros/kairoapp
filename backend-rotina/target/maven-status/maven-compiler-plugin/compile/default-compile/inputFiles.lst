@@ -4,6 +4,7 @@ C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routi
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\FinanceCategoryController.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\FinanceController.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\GoalController.java
+C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\RecipeController.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\TrainingController.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\WorkoutController.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\WorkoutLogController.java
@@ -14,6 +15,7 @@ C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routi
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\Goal.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\GoalType.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\GoalTypeConverter.java
+C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\Recipe.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\TrainingNote.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\TransactionType.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\Workout.java
@@ -23,6 +25,7 @@ C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routi
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\FinanceCategoryRepository.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\FinanceTransactionRepository.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\GoalRepository.java
+C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\RecipeRepository.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\TrainingNoteRepository.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\WorkoutLogRepository.java
 C:\Users\marco\Documents\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\WorkoutRepository.java
