@@ -42,7 +42,7 @@
         <div class="activity-item" *ngFor="let a of todaysActivities">
           <div class="activity-icon">📅</div>
           <div class="activity-details">
-            <div class="activity-name">{{ a.time ? (a.time | slice:0:5) + ' - ' : '' }}{{ a.title }}</div>
+            <div class="activity-name"><span class="cat-dot" [ngStyle]="{ background: a.category?.color || '#888' }"></span>{{ a.time ? (a.time | slice:0:5) + ' - ' : '' }}{{ a.title }}</div>
             <div class="activity-info">
               <div>{{ a.description || 'Sem descrição' }}</div>
             </div>

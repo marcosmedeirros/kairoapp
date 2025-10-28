@@ -16,6 +16,9 @@
   --color-text: #151515; /* darker default text for stronger contrast */
   --brand-font: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --radius-sm: 6px;
+  --focus-ring-color: #4C6FA3;
+  --error-color: #e57373;
+  --success-color: #4caf50;
 }
 
 /* Tema escuro */
@@ -291,3 +294,75 @@ html, body {
 /* Links */
 .theme-dark a { color: #d1d5ff; }
 .theme-dark a:hover { color: #fff; }
+
+/* Global, consistent inputs */
+input, select, textarea {
+  appearance: none;
+  background: #fff;
+  color: var(--color-text);
+  border: 1px solid rgba(44,62,80,0.14);
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  font-family: var(--brand-font), sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+input:hover, select:hover, textarea:hover {
+  border-color: rgba(44,62,80,0.28);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--focus-ring-color);
+  box-shadow: 0 0 0 3px rgba(76,111,163,0.18);
+}
+input::placeholder, textarea::placeholder { color: #9aa4b2; }
+
+/* Sizes */
+.input-sm { padding: 0.45rem 0.6rem; border-radius: 8px; font-size: 0.9rem; }
+.input-lg { padding: 0.8rem 1rem; border-radius: 12px; font-size: 1rem; }
+
+/* Grouping */
+.form-field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.8rem; }
+.form-field label { font-weight: 600; color: var(--color-text); font-size: 0.9rem; }
+.helper-text { font-size: 0.8rem; color: var(--color-secondary-text); }
+.error-text { font-size: 0.8rem; color: var(--error-color); }
+
+/* States */
+input:disabled, select:disabled, textarea:disabled { opacity: 0.65; cursor: not-allowed; }
+.ng-invalid.ng-touched { border-color: var(--error-color) !important; box-shadow: 0 0 0 3px rgba(229,115,115,0.18) !important; }
+
+/* Specific types */
+input[type="date"], input[type="time"], input[type="datetime-local"] { letter-spacing: 0.2px; }
+select { background-image: linear-gradient(45deg, transparent 50%, #8b8b8b 50%), linear-gradient(135deg, #8b8b8b 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+  background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 2rem;
+}
+
+/* Input with prefix/suffix icons */
+.input-with-icon { position: relative; }
+.input-with-icon .icon-left { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-secondary-text); }
+.input-with-icon input { padding-left: 2rem; }
+
+/* Dark theme for inputs */
+.theme-dark input, .theme-dark select, .theme-dark textarea {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--border-color);
+}
+.theme-dark input:hover, .theme-dark select:hover, .theme-dark textarea:hover { border-color: rgba(255,255,255,0.16); }
+.theme-dark input:focus, .theme-dark select:focus, .theme-dark textarea:focus {
+  border-color: #9bb7e0;
+  box-shadow: 0 0 0 3px rgba(155,183,224,0.22);
+}
+.theme-dark input::placeholder, .theme-dark textarea::placeholder { color: var(--color-secondary-text); }
+.theme-dark .ng-invalid.ng-touched { box-shadow: 0 0 0 3px rgba(229,115,115,0.22) !important; }
+
+/* Fine tuning common forms already in app */
+.activity-form input, .activity-form textarea, .goals-form input, .goals-form textarea, .training-form input, .training-form textarea, .training-form select, .form-row .form-group input, .form-row .form-group select, .form-row .form-group textarea {
+  border-radius: 10px;
+  border-color: rgba(44,62,80,0.14);
+}
+.theme-dark .activity-form input, .theme-dark .activity-form textarea, .theme-dark .goals-form input, .theme-dark .goals-form textarea, .theme-dark .training-form input, .theme-dark .training-form textarea, .theme-dark .training-form select {
+  border-color: var(--border-color);
+}

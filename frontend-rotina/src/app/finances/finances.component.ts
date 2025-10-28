@@ -9,10 +9,21 @@ import { HttpClient } from '@angular/common/http';
 export class FinancesComponent implements OnInit {
   month: string = '';
 
+  // Novos seletores
+  selectedMonth: string = '';
+  selectedYear: number = new Date().getFullYear();
+  months = [
+    { value: '01', label: 'Jan' }, { value: '02', label: 'Fev' }, { value: '03', label: 'Mar' },
+    { value: '04', label: 'Abr' }, { value: '05', label: 'Mai' }, { value: '06', label: 'Jun' },
+    { value: '07', label: 'Jul' }, { value: '08', label: 'Ago' }, { value: '09', label: 'Set' },
+    { value: '10', label: 'Out' }, { value: '11', label: 'Nov' }, { value: '12', label: 'Dez' }
+  ];
+  years: number[] = [];
+
   // Totais
   summary: any = { income: 0, expense: 0, balance: 0, byCategory: [], month: '' };
 
-  // Meses com movimentações
+  // Meses disponíveis (chips removidos, mantemos caso útil no futuro)
   availableMonths: string[] = [];
 
   // Categorias
@@ -46,12 +57,24 @@ export class FinancesComponent implements OnInit {
     const m = String(today.getMonth() + 1).padStart(2, '0');
     const d = String(today.getDate()).padStart(2, '0');
     this.month = `${y}-${m}`;
+    this.selectedYear = y;
+    this.selectedMonth = m;
     this.newTransaction.date = `${y}-${m}-${d}`;
+
+    // popula anos (últimos 5 e próximos 2)
+    const start = y - 5; const end = y + 2;
+    this.years = Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
     this.fetchCategories();
     this.fetchAvailableMonths();
     this.fetchSummary();
     this.fetchTransactions();
+  }
+
+  onMonthSelectorChange() {
+    // Converte selectedYear/selectedMonth para string AAAA-MM
+    this.month = `${this.selectedYear}-${this.selectedMonth}`;
+    this.onMonthChange();
   }
 
   // === CATEGORIAS ===
@@ -186,6 +209,9 @@ export class FinancesComponent implements OnInit {
 
   selectMonth(m: string) {
     this.month = m;
+    const [yy, mm] = m.split('-');
+    this.selectedYear = Number(yy);
+    this.selectedMonth = mm;
     this.fetchTransactions();
     this.fetchSummary();
   }

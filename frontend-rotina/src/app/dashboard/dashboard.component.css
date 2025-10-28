@@ -488,3 +488,10 @@
 /* Force white titles for dark mode */
 :host-context(.theme-dark) .dashboard-header h1 { color: #ffffff; }
 :host-context(.theme-dark) .quick-actions h2 { color: #ffffff; }
+:host-context(.theme-dark) .day-card-content .day-item {
+  background: var(--color-surface-2);
+  border: 1px solid var(--border-color);
+}
+
+.cat-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; vertical-align:middle; }
+:host-context(.theme-dark) .day-card .activity-name { color: #ffffff; }

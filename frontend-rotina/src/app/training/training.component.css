@@ -1,45 +1,46 @@
 /* Training styles aligned with Gagnar theme */
+/* Layout containers */
 .training-container { display: grid; gap: 1rem; }
-.page-header h2 { margin: 0 0 0.25rem 0; color: var(--color-text); font-size: 1.5rem; }
+.page-header h2 { margin: 0 0 0.25rem 0; color: var(--color-text); font-size: 1.6rem; }
 .page-subtitle { margin: 0; color: var(--color-secondary-text); }
 
-.form-card { background: #fff; border: 1px solid rgba(44,62,80,0.04); padding: 1rem; border-radius: 10px; box-shadow: 0 6px 18px rgba(44,62,80,0.03); }
-.training-form .form-group { display:flex; flex-direction:column; margin-bottom:0.75rem; }
-.training-form label { font-size:0.85rem; color:var(--color-secondary-text); margin-bottom:0.35rem; }
-.training-form textarea, .training-form input, .training-form select { border:1px solid rgba(44,62,80,0.08); padding:0.6rem; border-radius:8px; font-family:var(--brand-font), sans-serif; }
+/* Stats bar */
+.stats-bar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+.stat-card { background: #fff; border: 1px solid rgba(44,62,80,0.06); padding: 0.9rem; border-radius: 12px; display: grid; place-items: start; }
+.stat-value { font-size: 1.6rem; font-weight: 800; color: var(--color-text); }
+.stat-label { color: var(--color-secondary-text); font-weight: 600; }
 
-.btn-submit { background:var(--color-accent); color:#fff; border:none; padding:0.6rem 1rem; border-radius:8px; cursor:pointer; font-weight:600; }
-.btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(76,111,163,0.12); }
-.btn-ghost { background:transparent; border:1px solid rgba(44,62,80,0.1); color:var(--color-text); padding:0.6rem 1rem; border-radius:8px; cursor:pointer; }
+/* Forms */
+.form-card { background: #fff; border: 1px solid rgba(44,62,80,0.06); padding: 1rem; border-radius: 12px; box-shadow: 0 6px 18px rgba(44,62,80,0.03); }
+.training-form .form-group { display:flex; flex-direction:column; gap:0.35rem; margin-bottom:0.75rem; }
+.training-form label { font-size:0.9rem; font-weight:600; color:var(--color-text); }
+.training-form input, .training-form textarea, .training-form select { border-radius:10px; }
 
-.stats-bar { display:flex; gap:1rem; }
-.stat-card { background:#fff; border:1px solid rgba(44,62,80,0.04); padding:0.75rem; border-radius:8px; min-width:120px; }
-.stat-value { font-weight:700; color:var(--color-accent); font-size:1.2rem; }
-.stat-label { color:var(--color-secondary-text); }
+/* Notes and lists */
+.notes-section { background: transparent; }
+.notes-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+@media (max-width: 900px) { .notes-grid { grid-template-columns: 1fr; } }
+.note-card { background:#fff; border:1px solid rgba(44,62,80,0.06); padding:1rem; border-radius:12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.note-header { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; }
+.workout-name { font-weight:800; color:var(--color-text); font-size:1.05rem; }
+.workout-exercises { color: var(--color-secondary-text); white-space: pre-wrap; line-height: 1.6; margin-top: 0.5rem; }
 
-.notes-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:1rem; }
-@media (max-width:900px){ .notes-grid { grid-template-columns:1fr; } }
-.note-card { background:#fff; border:1px solid rgba(44,62,80,0.04); padding:0.9rem; border-radius:10px; }
 .note-date { font-weight:700; color:var(--color-accent); }
-.note-content { color:var(--color-secondary-text); white-space: pre-wrap; }
-.empty-state { text-align:center; padding:2rem; background:#fff; border:1px dashed rgba(44,62,80,0.04); border-radius:10px; color:var(--color-secondary-text); }
+.workout-name-small { font-weight:700; color: var(--color-text); font-size: 0.95rem; margin-top: 0.25rem; }
+.workout-exercises-small { color: var(--color-secondary-text); white-space: pre-wrap; font-size: 0.9rem; line-height: 1.5; margin-top: 0.5rem; }
 
-/* Replaces inline styles */
-.flex-row { display: flex; gap: 0.5rem; }
-.flex-1 { flex: 1; }
-.mt-2 { margin-top: 0.5rem; }
-.align-center { align-items: center; }
-.note-header { display: flex; align-items: center; gap: 0.5rem; }
-
-/* Workout specific styles */
-.workout-name { font-weight: 700; color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem; }
-.workout-name-small { font-weight: 600; color: var(--color-text); font-size: 0.95rem; margin-top: 0.25rem; }
-.workout-exercises { white-space: pre-wrap; color: var(--color-secondary-text); font-size: 0.9rem; line-height: 1.6; }
-.workout-exercises-small { white-space: pre-wrap; color: var(--color-secondary-text); font-size: 0.85rem; line-height: 1.5; margin-top: 0.5rem; }
-.section-spacing { margin-top: 2rem; }
-.icon-btn { background: transparent; border: none; cursor: pointer; padding: 0.25rem; }
+/* Buttons */
+.btn-submit { background: var(--color-accent); color: #fff; border: none; padding: 0.65rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 700; }
+.btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+.btn-ghost { background: transparent; border: 1px solid rgba(44,62,80,0.14); color: var(--color-text); padding: 0.55rem 0.9rem; border-radius: 10px; }
+.icon-btn { background: transparent; border: 1px solid rgba(44,62,80,0.08); border-radius: 8px; }
 .icon-btn .icon { font-size: 1.1rem; }
-.icon-btn.danger:hover { opacity: 0.7; }
+.icon-btn:hover { background: rgba(0,0,0,0.04); }
+.icon-btn.danger { border-color: rgba(220,53,69,0.16); color: #dc3545; }
+
+/* Empty state */
+.empty-state { text-align:center; padding:1.25rem; background:#fff; border:1px dashed rgba(44,62,80,0.06); border-radius:12px; color:var(--color-secondary-text); }
+.empty-state-icon { font-size:2.2rem; margin-bottom:0.25rem; }
 
 /* Modal */
 .modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
@@ -49,13 +50,10 @@
 .danger:hover { background: #c0392b !important; }
 
 /* Dark theme overrides */
-:host-context(.theme-dark) .form-card,
 :host-context(.theme-dark) .stat-card,
+:host-context(.theme-dark) .form-card,
 :host-context(.theme-dark) .note-card,
-:host-context(.theme-dark) .empty-state {
-  background: var(--color-surface);
-  border: 1px solid var(--border-color);
-  box-shadow: none;
-}
-:host-context(.theme-dark) .modal-card { background: var(--color-surface); border: 1px solid var(--border-color); }
+:host-context(.theme-dark) .empty-state { background: var(--color-surface); border: 1px solid var(--border-color); box-shadow: none; }
 :host-context(.theme-dark) .btn-ghost { border-color: var(--border-color); color: var(--color-text); }
+:host-context(.theme-dark) .icon-btn { border-color: var(--border-color); }
+:host-context(.theme-dark) .icon-btn:hover { background: rgba(255,255,255,0.06); }

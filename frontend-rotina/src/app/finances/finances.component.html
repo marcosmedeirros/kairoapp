@@ -1,42 +1,42 @@
 <div class="header-row">
   <h2>Finanças</h2>
   <div class="month-filter">
-    <label for="month">Mês:</label>
-    <input id="month" type="text" inputmode="numeric" pattern="\\d{4}-\\d{2}" placeholder="AAAA-MM" [(ngModel)]="month" (change)="onMonthChange()" title="Digite no formato AAAA-MM (ex: 2025-10)" />
+    <label for="selMonth">Mês:</label>
+    <select id="selMonth" [(ngModel)]="selectedMonth" (change)="onMonthSelectorChange()">
+      <option *ngFor="let m of months" [ngValue]="m.value">{{ m.label }}</option>
+    </select>
+  </div>
+  <div class="month-filter" style="margin-left: .5rem;">
+    <label for="selYear">Ano:</label>
+    <select id="selYear" [(ngModel)]="selectedYear" (change)="onMonthSelectorChange()">
+      <option *ngFor="let y of years" [ngValue]="y">{{ y }}</option>
+    </select>
   </div>
   <div class="spacer"></div>
 </div>
 
-<!-- Lista de meses disponíveis -->
-<div class="months-list" *ngIf="availableMonths.length > 0">
-  <button 
-    *ngFor="let m of availableMonths" 
-    class="month-chip"
-    [class.active]="month === m"
-    (click)="selectMonth(m)"
-    [title]="'Filtrar por ' + (m | monthNamePt)">
-    {{ m | monthNamePt }}
-  </button>
-</div>
-
-<div class="grid cards">
-  <div class="card success">
-    <div class="card-title">Entradas</div>
-    <div class="card-value">{{ summary?.income | number:'1.2-2' }}</div>
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon">💰</div>
+    <div class="stat-content">
+      <h3>{{ summary?.income | number:'1.2-2' }}</h3>
+      <p>Entradas</p>
+    </div>
   </div>
-  <div class="card danger">
-    <div class="card-title">Saídas</div>
-    <div class="card-value">{{ summary?.expense | number:'1.2-2' }}</div>
+  <div class="stat-card">
+    <div class="stat-icon">💸</div>
+    <div class="stat-content">
+      <h3>{{ summary?.expense | number:'1.2-2' }}</h3>
+      <p>Saídas</p>
+    </div>
   </div>
-  <div class="card accent">
-    <div class="card-title">Saldo</div>
-    <div class="card-value">{{ summary?.balance | number:'1.2-2' }}</div>
+  <div class="stat-card">
+    <div class="stat-icon">🧮</div>
+    <div class="stat-content">
+      <h3>{{ summary?.balance | number:'1.2-2' }}</h3>
+      <p>Saldo</p>
+    </div>
   </div>
-  <div class="card info">
-    <div class="card-title">Mês</div>
-    <div class="card-value">{{ month | monthNamePt }}</div>
-  </div>
-  
 </div>
 
 <div class="grid two-cols">
