@@ -16,8 +16,12 @@ export class DashboardComponent implements OnInit {
   stats = {
     totalActivities: 0,
     todayActivities: 0,
-    workoutsThisWeek: 0
+    workoutsThisWeek: 0,
+    weeklyExpense: 0
   };
+
+  // guarda a lista de atividades do dia para a nova seção
+  todaysActivities: any[] = [];
 
   // Calendário semanal (array de dias com itens agrupados)
   weekCalendar: { date: Date, label: string, items: any[] }[] = [];
@@ -52,40 +56,54 @@ export class DashboardComponent implements OnInit {
     forkJoin({
       activities: this.safeGet('/api/activities'),
       diet: this.safeGet('/api/diet'),
-      training: this.safeGet('/api/training')
+      training: this.safeGet('/api/training'),
+      financeTx: this.safeGet('/api/finance/transactions')
     }).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         const activities = res.activities || [];
         const diet = res.diet || [];
         const training = res.training || [];
+        const financeTx = res.financeTx || [];
 
         // Stats derived from activities
         this.stats.totalActivities = activities.length;
 
         const todayStr = this.formatDateKey(new Date());
-        this.stats.todayActivities = activities.filter(a => this.formatDateKey(a.date || a.localDate || a.dateTime || '') === todayStr).length;
+        this.stats.todayActivities = activities.filter((a: any) => this.formatDateKey(a.date || a.localDate || a.dateTime || '') === todayStr).length;
 
         // Workouts this week from training notes (assume training items have 'date')
         const now = new Date();
-        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        this.stats.workoutsThisWeek = training.filter(n => {
+        const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+        this.stats.workoutsThisWeek = training.filter((n: any) => {
           const d = this.parseDate(n.date);
           return d && d >= weekAgo;
         }).length;
 
-        // Build the weekly calendar (Monday -> Sunday)
+        // Weekly Expense: sum expenses in last 7 days
+        const weeklyExpense = financeTx.reduce((sum: number, tx: any) => {
+          if (!tx || String(tx.type).toUpperCase() !== 'EXPENSE') return sum;
+          const d = this.parseDate(tx.date);
+          if (!d || d < weekAgo) return sum;
+          const amount = typeof tx.amount === 'number' ? tx.amount : parseFloat(String(tx.amount || 0));
+          return sum + (isNaN(amount) ? 0 : amount);
+        }, 0);
+        this.stats.weeklyExpense = Math.round(weeklyExpense * 100) / 100;
+
+        // Weekly calendar and todays activities list
         this.weekCalendar = this.buildWeekCalendar(activities, training, diet);
+        this.todayKey = todayStr;
+        this.todaysActivities = activities.filter((a: any) => this.formatDateKey(a.date || a.localDate || a.dateTime || '') === todayStr)
+          .sort((a: any, b: any) => {
+            const ta = this.combineDateTime(a.date, a.time)?.getTime() || 0;
+            const tb = this.combineDateTime(b.date, b.time)?.getTime() || 0;
+            return ta - tb;
+          });
 
-        // Compute today's key once for template comparisons
-        this.todayKey = this.formatDateKey(new Date());
-
-        // Determine activity of the day (prioritize activities, then training, then diet)
-        const todayKey = this.todayKey;
-        const todaysActivities = activities.filter(a => this.formatDateKey(a.date || a.localDate || a.dateTime || '') === todayKey);
-        const todaysTraining = training.filter(t => this.formatDateKey(t.date) === todayKey);
-        const todaysDiet = diet.filter(d => this.formatDateKey(d.date) === todayKey);
-        if (todaysActivities.length) {
-          this.activityOfDay = { type: 'calendar', item: todaysActivities[0] };
+        // Activity of the day kept for potential future use
+        const todaysTraining = training.filter((t: any) => this.formatDateKey(t.date) === todayStr);
+        const todaysDiet = diet.filter((dlog: any) => this.formatDateKey(dlog.date) === todayStr);
+        if (this.todaysActivities.length) {
+          this.activityOfDay = { type: 'calendar', item: this.todaysActivities[0] };
         } else if (todaysTraining.length) {
           this.activityOfDay = { type: 'training', item: todaysTraining[0] };
         } else if (todaysDiet.length) {
