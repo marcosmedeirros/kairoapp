@@ -1,0 +1,42 @@
+<div class="notes-page">
+  <h2>Anotações</h2>
+  <p class="muted">Escreva suas notas / diário. O campo de descrição é grande para entradas longas.</p>
+
+  <div class="add-note">
+    <input placeholder="Título" [(ngModel)]="newTitle" />
+    <textarea placeholder="Escreva aqui sua anotação..." rows="6" [(ngModel)]="newBody"></textarea>
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:0.5rem;">
+      <button class="btn-ghost" (click)="newTitle='';newBody=''">Limpar</button>
+      <button class="btn-submit" (click)="addNote()">Salvar anotação</button>
+    </div>
+  </div>
+
+  <div class="notes-grid">
+    <div *ngFor="let n of notes" class="note-card">
+      <div class="note-header">
+        <div *ngIf="editingId !== n.id; else editTitleTpl" class="note-title">{{ n.title || '(Sem título)' }}</div>
+        <ng-template #editTitleTpl>
+          <input class="edit-title" [(ngModel)]="editTitle" />
+        </ng-template>
+
+        <div class="note-actions">
+          <button *ngIf="editingId !== n.id" class="icon-btn" title="Editar" (click)="startEdit(n)">✏️</button>
+          <button *ngIf="editingId !== n.id" class="icon-btn danger" title="Excluir" (click)="deleteNote(n)">🗑️</button>
+        </div>
+      </div>
+
+      <div *ngIf="editingId === n.id; else viewNoteTpl">
+        <textarea class="edit-body" rows="6" [(ngModel)]="editBody"></textarea>
+        <div style="text-align:right;display:flex;gap:0.5rem;justify-content:flex-end;">
+          <button class="btn-ghost" (click)="cancelEdit()">Cancelar</button>
+          <button class="btn-submit" (click)="saveEdit(n)">Salvar</button>
+        </div>
+      </div>
+
+      <ng-template #viewNoteTpl>
+        <div class="note-body">{{ n.body }}</div>
+        <div class="note-meta">{{ formatDate(n.createdAt) }}</div>
+      </ng-template>
+    </div>
+  </div>
+</div>

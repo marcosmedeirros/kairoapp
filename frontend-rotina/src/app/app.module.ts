@@ -14,6 +14,7 @@ import { FinancesComponent } from './finances/finances.component';
 import { DatePtPipe } from './pipes/date-pt.pipe';
 import { MonthNamePtPipe } from './pipes/month-name-pt.pipe';
 import { HabitsComponent } from './habitos/habitos.component';
+import { AnotacoesComponent } from './anotacoes/anotacoes.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -23,7 +24,8 @@ const routes: Routes = [
   { path: 'training', component: TrainingComponent },
   { path: 'goals', component: GoalsComponent },
   { path: 'finances', component: FinancesComponent },
-  { path: 'habitos', component: HabitsComponent }
+  { path: 'habitos', component: HabitsComponent },
+  { path: 'anotacoes', component: AnotacoesComponent }
 ];
 
 @NgModule({
@@ -36,6 +38,7 @@ const routes: Routes = [
     GoalsComponent,
     FinancesComponent,
     HabitsComponent,
+    AnotacoesComponent,
     DatePtPipe,
     MonthNamePtPipe
   ],

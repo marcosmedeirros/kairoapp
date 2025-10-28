@@ -1,0 +1,67 @@
+:root{ --card:#1e1e1e; --muted:#9e9e9e; --primary:#000; --note-btn-accent:#00bfa5; --note-btn-accent-2:#00a88f; --note-btn-text:#ffffff}
+
+.notes-page{padding:1rem;color:var(--color-text);background:var(--color-surface, #1e1e1e);border:1px solid rgba(255,255,255,0.04);border-radius:8px}
+.notes-page h2{color:var(--color-text)}
+
+.add-note{background:var(--color-surface);padding:1rem;border-radius:8px;margin-bottom:1rem;border:1px solid var(--border-color)}
+.add-note input{width:100%;padding:0.6rem;border-radius:8px;border:1px solid var(--border-color);background:transparent;color:var(--color-text);margin-bottom:0.5rem}
+.add-note textarea{width:100%;padding:0.6rem;border-radius:8px;border:1px solid var(--border-color);background:transparent;color:var(--color-text)}
+
+/* Botões mais agradáveis para Anotações */
+.add-note .btn-submit,
+.note-card .btn-submit {
+  background: linear-gradient(180deg, var(--note-btn-accent), var(--note-btn-accent-2));
+  color: var(--note-btn-text);
+  border: none;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+.add-note .btn-submit:hover,
+.note-card .btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+}
+.add-note .btn-submit:active,
+.note-card .btn-submit:active { transform: translateY(0); }
+.add-note .btn-submit:focus,
+.note-card .btn-submit:focus {
+  outline: 3px solid rgba(0,191,165,0.16);
+}
+
+/* Ghost (limpar/cancelar) */
+.add-note .btn-ghost,
+.note-card .btn-ghost {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, transform 0.08s ease;
+}
+.add-note .btn-ghost:hover,
+.note-card .btn-ghost:hover { background: rgba(255,255,255,0.02); transform: translateY(-1px); }
+.add-note .btn-ghost:focus,
+.note-card .btn-ghost:focus { outline: 3px solid rgba(255,255,255,0.06); }
+
+.notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem}
+@media (max-width:800px){.notes-grid{grid-template-columns:1fr}}
+
+.note-card{background:var(--color-surface);padding:0.8rem;border-radius:8px;border:1px solid var(--border-color)}
+.note-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem}
+.note-title{font-weight:700;color:var(--color-text)}
+.note-actions{display:flex;gap:0.35rem}
+.icon-btn{padding:0;width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--color-text);display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover { background: rgba(255,255,255,0.02); transform: translateY(-1px); }
+.icon-btn.danger{color:#ff6b6b}
+.note-body{white-space:pre-wrap;color:var(--color-text);margin-bottom:0.5rem}
+.note-meta{font-size:0.8rem;color:var(--color-secondary-text)}
+
+.edit-title{width:100%;padding:0.5rem;border-radius:6px;border:1px solid var(--border-color);background:transparent;color:var(--color-text);margin-bottom:0.5rem}
+.edit-body{width:100%;padding:0.6rem;border-radius:6px;border:1px solid var(--border-color);background:transparent;color:var(--color-text)}
+
+.debug-banner{padding:0.5rem 0.75rem;border-radius:6px;background:rgba(255,255,255,0.03);color:var(--color-secondary-text);margin-bottom:0.75rem;font-size:0.9rem}
