@@ -47,3 +47,15 @@
 .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
 .danger { background: #e74c3c !important; }
 .danger:hover { background: #c0392b !important; }
+
+/* Dark theme overrides */
+:host-context(.theme-dark) .form-card,
+:host-context(.theme-dark) .stat-card,
+:host-context(.theme-dark) .note-card,
+:host-context(.theme-dark) .empty-state {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+:host-context(.theme-dark) .modal-card { background: var(--color-surface); border: 1px solid var(--border-color); }
+:host-context(.theme-dark) .btn-ghost { border-color: var(--border-color); color: var(--color-text); }

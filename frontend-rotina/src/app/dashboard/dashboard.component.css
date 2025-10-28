@@ -450,3 +450,41 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Dark theme overrides */
+:host-context(.theme-dark) .dashboard-container { background: transparent; }
+:host-context(.theme-dark) .stat-card,
+:host-context(.theme-dark) .progress-section,
+:host-context(.theme-dark) .card,
+:host-context(.theme-dark) .quick-actions,
+:host-context(.theme-dark) .day-card {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+:host-context(.theme-dark) .card-header { border-bottom: 1px solid var(--border-color); }
+:host-context(.theme-dark) .stat-content h3,
+:host-context(.theme-dark) .card-header h3,
+:host-context(.theme-dark) .day-card-header .day-label { color: var(--color-text); }
+:host-context(.theme-dark) .welcome-message,
+:host-context(.theme-dark) .stat-content p,
+:host-context(.theme-dark) .activity-info,
+:host-context(.theme-dark) .view-all { color: var(--color-secondary-text); }
+
+:host-context(.theme-dark) .activity-item,
+:host-context(.theme-dark) .goal-item,
+:host-context(.theme-dark) .week-day {
+  background: var(--color-surface-2);
+  border: 1px solid var(--border-color);
+}
+:host-context(.theme-dark) .activity-item:hover { background: #202536; }
+
+:host-context(.theme-dark) .progress-bar-container { background: #1d2230; }
+
+:host-context(.theme-dark) .calendar-card { background: var(--color-surface); border: 1px solid var(--border-color); box-shadow: none; }
+:host-context(.theme-dark) .day-card.today { border: 1px solid var(--border-color); box-shadow: none; }
+:host-context(.theme-dark) .more { color: #d1d5ff; }
+
+/* Force white titles for dark mode */
+:host-context(.theme-dark) .dashboard-header h1 { color: #ffffff; }
+:host-context(.theme-dark) .quick-actions h2 { color: #ffffff; }

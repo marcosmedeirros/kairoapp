@@ -18,3 +18,15 @@
 .activity-calendar { margin-top:1rem; background:#fff; padding:1rem; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
 .activity-calendar h4 { margin:0 0 0.5rem 0; }
 
+/* Dark theme overrides */
+:host-context(.theme-dark) .form-card,
+:host-context(.theme-dark) .list-section,
+:host-context(.theme-dark) .activity-calendar {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+:host-context(.theme-dark) .count,
+:host-context(.theme-dark) .card-meta { color: var(--color-secondary-text); }
+:host-context(.theme-dark) .btn-submit { background: var(--color-accent); }
+:host-context(.theme-dark) .btn-ghost { border-color: var(--border-color); color: var(--color-text); }

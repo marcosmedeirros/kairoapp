@@ -87,6 +87,26 @@
 
 .empty-recipes { text-align: center; padding: 2rem; color: var(--color-secondary-text); background: #f8f9fa; border-radius: 8px; }
 
+/* Dark theme overrides */
+:host-context(.theme-dark) .calendar-card,
+:host-context(.theme-dark) .recipes-section,
+:host-context(.theme-dark) .recipe-form-card,
+:host-context(.theme-dark) .recipe-card,
+:host-context(.theme-dark) .modal-card,
+:host-context(.theme-dark) .empty-recipes {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+:host-context(.theme-dark) .calendar-grid { background: #0c0e12; }
+:host-context(.theme-dark) .calendar-day { background: var(--color-surface); border: 1px solid var(--border-color); }
+:host-context(.theme-dark) .calendar-day.in-month:hover { background: var(--color-surface-2); box-shadow: none; }
+:host-context(.theme-dark) .meal-item { background: var(--color-surface-2); }
+:host-context(.theme-dark) .notes-section { background: #332a18; border-left-color: #ffc107; }
+:host-context(.theme-dark) .icon-btn.edit:hover { background: #1f2a3b; }
+:host-context(.theme-dark) .icon-btn.delete:hover { background: #3a2224; }
+:host-context(.theme-dark) .btn-cancel { border-color: var(--border-color); color: var(--color-text); }
+
 @media (max-width: 640px) {
   .calendar-day { min-height: 50px; padding: 0.25rem; }
   .day-number { font-size: 0.8rem; }

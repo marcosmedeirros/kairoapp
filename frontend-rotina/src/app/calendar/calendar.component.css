@@ -61,3 +61,35 @@
 .event-line { display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem; }
 .event-left { flex:1; }
 .event-actions { display:flex; gap:0.5rem; align-items:center; }
+
+/* Dark theme overrides for Calendar */
+:host-context(.theme-dark) .form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+:host-context(.theme-dark) .activity-form input,
+:host-context(.theme-dark) .activity-form textarea {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--border-color);
+}
+
+:host-context(.theme-dark) .month-calendar {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+:host-context(.theme-dark) .weeks { background: #0c0e12; }
+:host-context(.theme-dark) .day {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+}
+:host-context(.theme-dark) .day-number { color: var(--color-text); }
+:host-context(.theme-dark) .event-dot { background: #ffffff; }
+
+:host-context(.theme-dark) .modal-card {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}

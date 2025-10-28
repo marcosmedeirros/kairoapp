@@ -82,3 +82,24 @@ input:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; }
 .modal-content { background: #fff; padding: 1rem; border-radius: 8px; width: min(420px, 92vw); }
 .modal-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1rem; }
+
+/* Dark theme overrides */
+:host-context(.theme-dark) .month-chip { background: #202536; color: var(--color-text); }
+:host-context(.theme-dark) .month-chip:hover { background: #2a3043; }
+:host-context(.theme-dark) .month-chip.active { background: #1f2a3b; border-color: #475569; color: #e2e8f0; }
+
+:host-context(.theme-dark) .card { background: var(--color-surface); border: 1px solid var(--border-color); box-shadow: none; }
+:host-context(.theme-dark) .card .card-title { color: var(--color-secondary-text); }
+
+:host-context(.theme-dark) input,
+:host-context(.theme-dark) select { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--border-color); }
+:host-context(.theme-dark) .edit-input,
+:host-context(.theme-dark) .edit-input-small { background: var(--color-surface); color: var(--color-text); border-color: var(--border-color); }
+
+:host-context(.theme-dark) .icon-btn:hover { background: rgba(255,255,255,.06); }
+:host-context(.theme-dark) .table-header { color: var(--color-text); border-bottom-color: var(--border-color); }
+:host-context(.theme-dark) .table-row { border-bottom-color: var(--border-color); }
+:host-context(.theme-dark) .description-cell { color: var(--color-secondary-text); }
+
+:host-context(.theme-dark) .modal { background: rgba(0,0,0,.55); }
+:host-context(.theme-dark) .modal-content { background: var(--color-surface); border: 1px solid var(--border-color); }
