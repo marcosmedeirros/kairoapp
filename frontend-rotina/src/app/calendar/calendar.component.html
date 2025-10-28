@@ -45,25 +45,24 @@
     </form>
   </div>
 
-  <!-- Calendário mensal -->
-  <div class="main-columns">
-    <div class="month-calendar">
-      <div class="calendar-header">
-        <button class="nav-btn" (click)="prevMonth()">◀</button>
-        <div class="month-title">{{ monthNames[currentMonth] }} {{ currentYear }}</div>
-        <button class="nav-btn" (click)="nextMonth()">▶</button>
-      </div>
-      <div class="weekday-row">
-        <div *ngFor="let wd of ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']" class="weekday">{{ wd }}</div>
-      </div>
-      <div class="weeks">
-        <div class="week" *ngFor="let week of weeks">
-          <div class="day" *ngFor="let d of week" [class.outside]="!d.inMonth" (click)="selectDay(d.dateStr)">
-            <div class="day-number">{{ d.day }}</div>
-            <!-- Indica se há eventos; cor herdada do primeiro evento do dia -->
-            <div *ngIf="hasEvent(d.dateStr)" class="event-dot" [ngStyle]="{ background: getDayDotColor(d.dateStr) }" title="Evento"></div>
-          </div>
-        </div>
+  <!-- Calendário mensal no estilo da Dieta -->
+  <div class="calendar-card">
+    <div class="calendar-header">
+      <button class="nav-btn" (click)="prevMonth()">◀</button>
+      <h3>{{ monthNames[currentMonth] }} {{ currentYear }}</h3>
+      <button class="nav-btn" (click)="nextMonth()">▶</button>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="weekday-header" *ngFor="let wd of weekdayNames">{{ wd }}</div>
+      <div
+        class="calendar-day"
+        *ngFor="let cell of flatDays"
+        [class.in-month]="cell.inMonth"
+        [class.has-activity]="hasEvent(cell.dateStr)"
+        (click)="cell.inMonth && selectDay(cell.dateStr)"
+        [title]="hasEvent(cell.dateStr) ? 'Há atividades' : ''">
+        <div class="day-number">{{ cell.day }}</div>
       </div>
     </div>
   </div>

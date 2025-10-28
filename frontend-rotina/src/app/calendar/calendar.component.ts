@@ -37,7 +37,9 @@ export class CalendarComponent implements OnInit {
   currentMonth: number = 0;
   currentYear: number = 0;
   weeks: Array<Array<{ day: number; dateStr: string; inMonth: boolean }>> = [];
+  flatDays: Array<{ day: number; dateStr: string; inMonth: boolean }> = [];
   monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  weekdayNames = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
   constructor(private http: HttpClient) {}
 
@@ -201,6 +203,7 @@ export class CalendarComponent implements OnInit {
     const startDate = new Date(this.currentYear, this.currentMonth, 1 - startDay);
 
     const weeks: Array<Array<{ day: number; dateStr: string; inMonth: boolean }>> = [];
+    const flat: Array<{ day: number; dateStr: string; inMonth: boolean }> = [];
     let cur = new Date(startDate.getTime());
     for (let w = 0; w < 6; w++) {
       const week: Array<{ day: number; dateStr: string; inMonth: boolean }> = [];
@@ -208,12 +211,15 @@ export class CalendarComponent implements OnInit {
         const day = cur.getDate();
         const inMonth = cur.getMonth() === this.currentMonth;
         const dateStr = this.toIsoDate(cur);
-        week.push({ day, dateStr, inMonth });
+        const cell = { day, dateStr, inMonth };
+        week.push(cell);
+        flat.push(cell);
         cur.setDate(cur.getDate() + 1);
       }
       weeks.push(week);
     }
     this.weeks = weeks;
+    this.flatDays = flat;
   }
 
   toIsoDate(d: Date): string {

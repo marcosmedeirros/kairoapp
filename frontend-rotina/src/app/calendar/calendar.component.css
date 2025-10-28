@@ -53,16 +53,28 @@
 .event-dot { width:8px; height:8px; border-radius:50%; background:var(--color-accent); position:absolute; right:8px; bottom:8px; }
 .nav-btn { background:transparent; border:1px solid rgba(0,0,0,0.06); padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; }
 
-/* Day modal styles */
-.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center; z-index:50; }
-.modal-card { background:#fff; padding:1rem; border-radius:8px; width:90%; max-width:520px; box-shadow:0 8px 30px rgba(0,0,0,0.2); }
-.event-item { padding:0.5rem 0; }
-.event-item + .event-item { border-top:1px dashed rgba(0,0,0,0.06); }
-.event-line { display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem; }
-.event-left { flex:1; }
-.event-actions { display:flex; gap:0.5rem; align-items:center; }
+/* Calendar card/grid like Diet */
+.calendar-card { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 6px 18px rgba(44,62,80,0.03); margin-top: 1rem; }
+.calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.calendar-header h3 { margin: 0; font-size: 1.2rem; color: var(--color-text); }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #e9eef6; padding: 4px; border-radius: 8px; }
+.weekday-header { text-align: center; font-weight: 600; color: var(--color-secondary-text); font-size: 0.85rem; padding: 0.5rem; }
+.calendar-day { background: #fff; min-height: 70px; padding: 0.5rem; border-radius: 4px; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; transition: all 0.2s; }
+.calendar-day:not(.in-month) { background: #f9f9f9; cursor: default; opacity: 0.3; }
+.calendar-day.in-month:hover { background: #e3f2fd; transform: scale(1.02); box-shadow: 0 2px 8px rgba(76,111,163,0.15); }
+.calendar-day.has-activity { background: #e8f5e9; border: 2px solid #4caf50; }
+.day-number { font-weight: 600; color: var(--color-text); font-size: 0.9rem; }
 
-/* Dark theme overrides for Calendar */
+/* Remove old event dot visual importance */
+.event-dot { display:none; }
+
+/* Dark theme variants */
+:host-context(.theme-dark) .calendar-card { background: var(--color-surface); border: 1px solid var(--border-color); box-shadow: none; }
+:host-context(.theme-dark) .calendar-grid { background: #0c0e12; }
+:host-context(.theme-dark) .calendar-day { background: var(--color-surface); border: 1px solid var(--border-color); }
+:host-context(.theme-dark) .calendar-day.in-month:hover { background: var(--color-surface-2); box-shadow: none; }
+:host-context(.theme-dark) .calendar-day.has-activity { background: #1e2a22; border: 2px solid #4caf50; }
+
 :host-context(.theme-dark) .form-card {
   background: var(--color-surface);
   border: 1px solid var(--border-color);
