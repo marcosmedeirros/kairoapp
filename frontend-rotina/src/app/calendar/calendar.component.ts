@@ -8,12 +8,17 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CalendarComponent implements OnInit {
   activities: any[] = [];
+  categories: any[] = [];
+
   newActivity = {
     title: '',
     description: '',
     date: '',
-    time: ''
+    time: '',
+    categoryId: null as number | null
   };
+
+  newCategory: any = { name: '', color: '#888888' };
 
   // editing state
   editingActivityId: number | null = null;
@@ -37,6 +42,7 @@ export class CalendarComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    this.fetchCategories();
     this.fetchActivities();
     const now = new Date();
     this.currentMonth = now.getMonth();
@@ -49,13 +55,15 @@ export class CalendarComponent implements OnInit {
     this.newActivity.time = `${hh}:${mm}`;
   }
 
+  fetchCategories() {
+    this.http.get<any[]>('/api/categories').subscribe(data => {
+      this.categories = data || [];
+    });
+  }
+
   fetchActivities() {
     this.http.get<any[]>('/api/activities').subscribe((data) => {
-      const sorted = (data || []).slice().sort((a, b) => {
-        const ta = this.activityTimestamp(a);
-        const tb = this.activityTimestamp(b);
-        return tb - ta; // descending
-      });
+      const sorted = (data || []).slice().sort((a, b) => this.activityTimestamp(b) - this.activityTimestamp(a));
       this.activities = sorted;
       this.buildCalendar();
       // Se um dia estiver aberto, atualiza sua lista
@@ -72,9 +80,7 @@ export class CalendarComponent implements OnInit {
     if (!dateStr) return Number.NEGATIVE_INFINITY;
     const parts = dateStr.split('-').map((s: string) => parseInt(s, 10));
     if (parts.length < 3) return Number.NEGATIVE_INFINITY;
-    const year = parts[0];
-    const month = parts[1] - 1;
-    const day = parts[2];
+    const year = parts[0], month = parts[1] - 1, day = parts[2];
     let hh = 0, mm = 0, ss = 0;
     const t = act.time || act.timeString || (act.dateTime ? act.dateTime.split('T')[1] : '');
     if (t) {
@@ -83,8 +89,7 @@ export class CalendarComponent implements OnInit {
       if (timeParts.length >= 2 && !isNaN(timeParts[1])) mm = timeParts[1];
       if (timeParts.length >= 3 && !isNaN(timeParts[2])) ss = timeParts[2];
     }
-    const d = new Date(year, month, day, hh, mm, ss);
-    return d.getTime();
+    return new Date(year, month, day, hh, mm, ss).getTime();
   }
 
   startEdit(a: any) {
@@ -93,7 +98,8 @@ export class CalendarComponent implements OnInit {
       title: a.title || '',
       description: a.description || '',
       date: a.date ? this.formatDateForInput(a.date) : (this.selectedDate || ''),
-      time: a.time ? (a.time.length === 5 ? a.time : this.formatTimeForInput(a.time)) : ''
+      time: a.time ? (a.time.length === 5 ? a.time : this.formatTimeForInput(a.time)) : '',
+      categoryId: a.category?.id || null
     };
   }
 
@@ -104,6 +110,11 @@ export class CalendarComponent implements OnInit {
 
   saveEdit(a: any) {
     const payload: any = { ...this.editedActivity };
+    if (payload.categoryId) {
+      const cat = this.categories.find(c => c.id === payload.categoryId);
+      if (cat) payload.category = { id: cat.id, name: cat.name, color: cat.color };
+      delete payload.categoryId;
+    }
     if (!payload.date) delete payload.date;
     if (!payload.time) delete payload.time;
     this.http.put(`/api/activities/${a.id}`, payload).subscribe(() => {
@@ -128,10 +139,7 @@ export class CalendarComponent implements OnInit {
     this.http.delete(`/api/activities/${this.activityToDelete.id}`).subscribe(() => {
       this.closeDeleteModal();
       this.fetchActivities();
-    }, (err) => {
-      console.error('Failed to delete activity', err);
-      this.closeDeleteModal();
-    });
+    }, () => this.closeDeleteModal());
   }
 
   // utilities
@@ -269,12 +277,7 @@ export class CalendarComponent implements OnInit {
     if (typeof input === 'string' && input.match(/^\d{4}-\d{2}-\d{2}$/)) return input;
     try {
       const d = new Date(input);
-      if (!isNaN(d.getTime())) {
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${y}-${m}-${day}`;
-      }
+      if (!isNaN(d.getTime())) { const y = d.getFullYear(); const m = String(d.getMonth()+1).padStart(2,'0'); const day = String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
     } catch {}
     const s = String(input);
     const m = s.match(/(\d{4}-\d{2}-\d{2})/);
@@ -282,13 +285,34 @@ export class CalendarComponent implements OnInit {
   }
 
   addActivity() {
-    const payload: any = { ...this.newActivity };
-    if (!payload.date) delete payload.date;
-    if (!payload.time) delete payload.time;
+    const payload: any = { title: this.newActivity.title, description: this.newActivity.description, date: this.newActivity.date, time: this.newActivity.time };
+    if (this.newActivity.categoryId) {
+      const cat = this.categories.find(c => c.id === this.newActivity.categoryId);
+      if (cat) payload.category = { id: cat.id, name: cat.name, color: cat.color };
+    }
     this.http.post('/api/activities', payload).subscribe(() => {
       const now = new Date();
-      this.newActivity = { title: '', description: '', date: this.toIsoDate(now), time: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}` };
+      this.newActivity = { title: '', description: '', date: this.toIsoDate(now), time: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`, categoryId: null };
       this.fetchActivities();
     }, (err) => console.error('Failed to add activity', err));
+  }
+
+  createCategory() {
+    const payload = { name: (this.newCategory.name||'').trim(), color: this.newCategory.color || '#888888' };
+    if (!payload.name) return;
+    this.http.post('/api/categories', payload).subscribe(() => {
+      this.newCategory = { name: '', color: '#888888' };
+      this.fetchCategories();
+    });
+  }
+
+  getDayDotColor(dateStr: string): string {
+    try {
+      const first = (this.activities || []).find(a => this.normalizeToIsoDate(a.date || a.dateString || a) === dateStr);
+      const color = first?.category?.color;
+      return color && typeof color === 'string' && color.length > 0 ? color : 'var(--color-accent)';
+    } catch {
+      return 'var(--color-accent)';
+    }
   }
 }

@@ -1,5 +1,6 @@
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\config\CorsConfig.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\ActivityController.java
+C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\CategoryController.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\DietController.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\FinanceCategoryController.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\FinanceController.java
@@ -9,6 +10,7 @@ C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\exampl
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\WorkoutController.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\controller\WorkoutLogController.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\Activity.java
+C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\Category.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\DietLog.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\FinanceCategory.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\FinanceTransaction.java
@@ -21,6 +23,7 @@ C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\exampl
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\Workout.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\model\WorkoutLog.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\ActivityRepository.java
+C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\CategoryRepository.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\DietLogRepository.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\FinanceCategoryRepository.java
 C:\Users\marco\WebstormProjects\kairoapp\backend-rotina\src\main\java\com\example\routineapp\repository\FinanceTransactionRepository.java

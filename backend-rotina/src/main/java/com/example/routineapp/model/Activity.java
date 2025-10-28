@@ -16,6 +16,10 @@ public class Activity {
     private LocalDate date;
     private LocalTime time;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public Activity() {}
 
     public Activity(String title, String description, LocalDate date, LocalTime time) {
@@ -36,4 +40,7 @@ public class Activity {
     public void setDate(LocalDate date) { this.date = date; }
     public LocalTime getTime() { return time; }
     public void setTime(LocalTime time) { this.time = time; }
+
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 }

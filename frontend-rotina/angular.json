@@ -17,7 +17,10 @@
             "main": "src/main.ts",
             "polyfills": [],
             "tsConfig": "tsconfig.json",
-            "assets": [],
+            "assets": [
+              "src/assets",
+              "src/.well-known"
+            ],
             "styles": ["src/styles.css"],
             "scripts": []
           },

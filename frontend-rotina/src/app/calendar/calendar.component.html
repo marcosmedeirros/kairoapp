@@ -24,6 +24,16 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Categoria</label>
+          <select id="category" [(ngModel)]="newActivity.categoryId" name="category">
+            <option [ngValue]="null">Sem categoria</option>
+            <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-group full-width">
         <label for="description">Descrição</label>
         <textarea id="description" [(ngModel)]="newActivity.description" name="description" placeholder="Descreva os detalhes da atividade..."></textarea>
@@ -50,7 +60,8 @@
         <div class="week" *ngFor="let week of weeks">
           <div class="day" *ngFor="let d of week" [class.outside]="!d.inMonth" (click)="selectDay(d.dateStr)">
             <div class="day-number">{{ d.day }}</div>
-            <div *ngIf="hasEvent(d.dateStr)" class="event-dot" title="Evento"></div>
+            <!-- Indica se há eventos; cor herdada do primeiro evento do dia -->
+            <div *ngIf="hasEvent(d.dateStr)" class="event-dot" [ngStyle]="{ background: getDayDotColor(d.dateStr) }" title="Evento"></div>
           </div>
         </div>
       </div>
@@ -76,6 +87,15 @@
               <input class="edit-input" type="time" [(ngModel)]="editedActivity.time" name="editTimeModal" />
             </div>
           </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Categoria</label>
+              <select class="edit-input" [(ngModel)]="editedActivity.categoryId" name="editCategoryModal">
+                <option [ngValue]="null">Sem categoria</option>
+                <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+              </select>
+            </div>
+          </div>
           <div class="form-group">
             <label>Descrição</label>
             <textarea class="edit-input" [(ngModel)]="editedActivity.description" name="editDescriptionModal"></textarea>
@@ -86,10 +106,11 @@
           </div>
         </div>
 
-        <!-- View mode: HH:mm - Título  [..icons..] -->
+        <!-- View mode: bolinha de cor + HH:mm - Título -->
         <ng-template #viewEvent>
           <div class="event-line">
             <div class="event-left">
+              <span class="cat-dot" [ngStyle]="{ background: ev.category?.color || '#888' }"></span>
               <strong>
                 <span *ngIf="ev.time">{{ displayTimeLabel(ev.time) }} - </span>{{ ev.title }}
               </strong>
@@ -117,6 +138,29 @@
       <div class="modal-actions">
         <button class="btn-ghost" (click)="closeDeleteModal()">Cancelar</button>
         <button class="btn-submit danger" (click)="confirmDelete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção de Categorias (após o calendário) -->
+  <div class="form-card" style="margin-top:1rem;">
+    <h3>🏷️ Categorias</h3>
+    <form (ngSubmit)="createCategory()" class="activity-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome</label>
+          <input [(ngModel)]="newCategory.name" name="catName" placeholder="Ex: Trabalho" />
+        </div>
+        <div class="form-group" style="max-width: 160px;">
+          <label>Cor</label>
+          <input type="color" [(ngModel)]="newCategory.color" name="catColor" />
+        </div>
+      </div>
+      <button type="submit" class="btn-submit">Adicionar Categoria</button>
+    </form>
+    <div style="margin-top:0.75rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+      <div *ngFor="let c of categories" class="cat-chip">
+        <span class="cat-dot" [ngStyle]="{ background: c.color }"></span> {{ c.name }}
       </div>
     </div>
   </div>

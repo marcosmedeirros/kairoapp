@@ -44,6 +44,7 @@ public class ActivityController {
             existing.setDescription(incoming.getDescription());
             existing.setDate(incoming.getDate());
             existing.setTime(incoming.getTime());
+            existing.setCategory(incoming.getCategory());
             Activity saved = repository.save(existing);
             return ResponseEntity.ok(saved);
         }).orElseGet(() -> ResponseEntity.notFound().build());
