@@ -1,0 +1,35 @@
+<div class="habits-page">
+  <h2>Hábitos</h2>
+  <p class="muted">Adicione hábitos e marque os dias da semana em que você realizou.</p>
+
+  <div class="add-habit">
+    <input placeholder="Novo hábito (ex: Beber água)" [(ngModel)]="newHabitName" />
+    <button class="btn-submit" (click)="addHabit()">Adicionar</button>
+  </div>
+
+  <div class="habits-list" *ngIf="habits.length > 0; else empty">
+    <div class="habit-item" *ngFor="let h of habits">
+      <div class="habit-header">
+        <div class="habit-title">{{ h.name }}</div>
+        <div class="habit-total">Total: <strong>{{ h.total }}</strong></div>
+      </div>
+      <div class="weekday-row">
+        <div class="weekday" *ngFor="let d of weekDaysIso">
+          <div class="weekday-label">{{ dayLabel(d) }}</div>
+          <button class="dot" [class.done]="dayDone(h,d)" (click)="toggleDone(h,d)"></button>
+        </div>
+      </div>
+      <div class="habit-actions">
+        <button class="btn-ghost danger" (click)="removeHabit(h)">Remover</button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #empty>
+    <div class="empty">Nenhum hábito cadastrado ainda.</div>
+  </ng-template>
+
+  <div style="margin-top:1rem;">
+    <button class="btn-ghost" (click)="startNewWeek()">Sincronizar semana</button>
+  </div>
+</div>
