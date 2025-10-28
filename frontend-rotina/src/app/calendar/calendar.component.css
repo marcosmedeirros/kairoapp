@@ -58,3 +58,6 @@
 .modal-card { background:#fff; padding:1rem; border-radius:8px; width:90%; max-width:520px; box-shadow:0 8px 30px rgba(0,0,0,0.2); }
 .event-item { padding:0.5rem 0; }
 .event-item + .event-item { border-top:1px dashed rgba(0,0,0,0.06); }
+.event-line { display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem; }
+.event-left { flex:1; }
+.event-actions { display:flex; gap:0.5rem; align-items:center; }

@@ -51,19 +51,21 @@ export class CalendarComponent implements OnInit {
 
   fetchActivities() {
     this.http.get<any[]>('/api/activities').subscribe((data) => {
-      // sort activities by date+time (most recent first)
       const sorted = (data || []).slice().sort((a, b) => {
         const ta = this.activityTimestamp(a);
         const tb = this.activityTimestamp(b);
         return tb - ta; // descending
       });
       this.activities = sorted;
-      // rebuild calendar so events are reflected
       this.buildCalendar();
+      // Se um dia estiver aberto, atualiza sua lista
+      if (this.selectedDate) {
+        this.refreshSelectedDateEvents();
+      }
     });
   }
 
-  // Convert activity's date+time to a local timestamp (ms). Missing date => -Infinity so it goes last.
+  // timestamp util
   activityTimestamp(act: any): number {
     if (!act) return Number.NEGATIVE_INFINITY;
     const dateStr = act.date || act.dateString || (act.dateTime ? act.dateTime.split('T')[0] : null);
@@ -73,7 +75,6 @@ export class CalendarComponent implements OnInit {
     const year = parts[0];
     const month = parts[1] - 1;
     const day = parts[2];
-    // parse time if present
     let hh = 0, mm = 0, ss = 0;
     const t = act.time || act.timeString || (act.dateTime ? act.dateTime.split('T')[1] : '');
     if (t) {
@@ -91,7 +92,7 @@ export class CalendarComponent implements OnInit {
     this.editedActivity = {
       title: a.title || '',
       description: a.description || '',
-      date: a.date ? this.formatDateForInput(a.date) : '',
+      date: a.date ? this.formatDateForInput(a.date) : (this.selectedDate || ''),
       time: a.time ? (a.time.length === 5 ? a.time : this.formatTimeForInput(a.time)) : ''
     };
   }
@@ -108,7 +109,7 @@ export class CalendarComponent implements OnInit {
     this.http.put(`/api/activities/${a.id}`, payload).subscribe(() => {
       this.editingActivityId = null;
       this.editedActivity = null;
-      this.fetchActivities();
+      this.fetchActivities(); // também atualiza modal
     }, (err) => console.error('Failed to update activity', err));
   }
 
@@ -133,14 +134,23 @@ export class CalendarComponent implements OnInit {
     });
   }
 
+  // utilities
   private formatDateForInput(input: any): string {
     if (!input) return '';
-    const d = new Date(input);
-    if (isNaN(d.getTime())) return '';
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+    // Se já for uma data no formato YYYY-MM-DD, retorna como está para evitar problemas de fuso horário
+    if (typeof input === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input)) {
+      return input;
+    }
+    // Se vier um objeto Date ou outra string com data embutida, tenta extrair a parte de data
+    if (input instanceof Date && !isNaN(input.getTime())) {
+      const y = input.getFullYear();
+      const m = String(input.getMonth() + 1).padStart(2, '0');
+      const d = String(input.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+    const s = String(input);
+    const m = s.match(/(\d{4}-\d{2}-\d{2})/);
+    return m ? m[1] : '';
   }
 
   private formatTimeForInput(input: any): string {
@@ -150,22 +160,36 @@ export class CalendarComponent implements OnInit {
     return match ? match[1] : s;
   }
 
-  formatDateDisplay(input: any): string {
-    if (!input) return '';
-    const d = new Date(input);
-    if (isNaN(d.getTime())) return String(input);
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+  displayTimeLabel(input: any): string {
+    const s = this.formatTimeForInput(input);
+    // garante HH:mm
+    if (/^\d{2}:\d{2}$/.test(s)) return s;
+    return s.substring(0,5);
   }
 
-  // Build a simple 6x7 month grid (weeks)
+  formatDateDisplay(input: any): string {
+    if (!input) return '';
+    // Evita UTC offset: formata diretamente se vier como YYYY-MM-DD
+    if (typeof input === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input)) {
+      const [y, m, d] = input.split('-');
+      return `${d}/${m}/${y}`;
+    }
+    // Caso contrário, tenta parsear sem quebrar
+    try {
+      const d = input instanceof Date ? input : new Date(input);
+      if (!isNaN(d.getTime())) {
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+    } catch {}
+    return String(input);
+  }
+
   buildCalendar() {
     const first = new Date(this.currentYear, this.currentMonth, 1);
-    const startDay = first.getDay(); // 0 (Sun) - 6 (Sat)
-
-    // start from the Sunday before (or the first day of the month if it starts on Sunday)
+    const startDay = first.getDay();
     const startDate = new Date(this.currentYear, this.currentMonth, 1 - startDay);
 
     const weeks: Array<Array<{ day: number; dateStr: string; inMonth: boolean }>> = [];
@@ -219,41 +243,39 @@ export class CalendarComponent implements OnInit {
     this.buildCalendar();
   }
 
-  // When a day is clicked, gather events for that day and open modal
   selectDay(dateStr: string) {
     this.selectedDate = dateStr;
+    this.refreshSelectedDateEvents();
+    this.showDayModal = true;
+  }
+
+  refreshSelectedDateEvents() {
+    if (!this.selectedDate) { this.eventsForSelectedDate = []; return; }
     this.eventsForSelectedDate = (this.activities || []).filter(a => {
       const ad = this.normalizeToIsoDate(a.date || a.dateString || a);
-      return ad === dateStr;
+      return ad === this.selectedDate;
     });
-    this.showDayModal = true;
   }
 
   closeDayModal() {
     this.showDayModal = false;
     this.selectedDate = null;
     this.eventsForSelectedDate = [];
+    this.cancelEdit();
   }
 
-  // Normalize various date inputs to YYYY-MM-DD (local date) without time offset issues
   normalizeToIsoDate(input: any): string {
     if (!input) return '';
-    // If already YYYY-MM-DD
     if (typeof input === 'string' && input.match(/^\d{4}-\d{2}-\d{2}$/)) return input;
-    // If ISO timestamp or other string, try parse
     try {
       const d = new Date(input);
       if (!isNaN(d.getTime())) {
-        // build local date parts
         const y = d.getFullYear();
         const m = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         return `${y}-${m}-${day}`;
       }
-    } catch (e) {
-      // fallthrough
-    }
-    // fallback: if input has date-like substring
+    } catch {}
     const s = String(input);
     const m = s.match(/(\d{4}-\d{2}-\d{2})/);
     return m ? m[1] : '';
@@ -264,7 +286,6 @@ export class CalendarComponent implements OnInit {
     if (!payload.date) delete payload.date;
     if (!payload.time) delete payload.time;
     this.http.post('/api/activities', payload).subscribe(() => {
-      // Limpa o formulário e recarrega a lista
       const now = new Date();
       this.newActivity = { title: '', description: '', date: this.toIsoDate(now), time: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}` };
       this.fetchActivities();

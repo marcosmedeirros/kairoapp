@@ -1,10 +1,13 @@
+com\example\routineapp\model\Recipe.class
 com\example\routineapp\model\FinanceTransaction.class
 com\example\routineapp\model\WorkoutLog.class
 com\example\routineapp\repository\GoalRepository.class
 com\example\routineapp\config\CorsConfig.class
 com\example\routineapp\controller\FinanceCategoryController.class
 com\example\routineapp\RoutineAppApplication.class
+com\example\routineapp\controller\RecipeController.class
 com\example\routineapp\model\DietLog.class
+com\example\routineapp\repository\RecipeRepository.class
 com\example\routineapp\model\TrainingNote.class
 com\example\routineapp\controller\GoalController.class
 com\example\routineapp\repository\FinanceCategoryRepository.class

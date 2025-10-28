@@ -163,27 +163,23 @@ export class DashboardComponent implements OnInit {
 
   private parseDate(input: any): Date | null {
     if (!input) return null;
-    // input might be ISO date string, or YYYY-MM-DD
     try {
-      // If input already a Date
       if (input instanceof Date) return input;
-      // Normalize: if it's like 2025-10-20 or with time
       const s = String(input);
-      // If time-only, skip
+      // Ignora valores somente hora
       if (/^\d{2}:\d{2}(:\d{2})?$/.test(s)) return null;
+      // Trata YYYY-MM-DD (com ou sem sufixo extra) como data local
+      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (m) {
+        const y = Number(m[1]);
+        const mon = Number(m[2]) - 1;
+        const d = Number(m[3]);
+        return new Date(y, mon, d);
+      }
+      // Fallback: tenta Date padrão
       const dt = new Date(s);
       if (!isNaN(dt.getTime())) return dt;
-      // try YYYY-MM-DD
-      const parts = s.split('-');
-      if (parts.length === 3) {
-        const y = Number(parts[0]);
-        const m = Number(parts[1]) - 1;
-        const d = Number(parts[2].slice(0,2));
-        return new Date(y, m, d);
-      }
-    } catch (e) {
-      return null;
-    }
+    } catch {}
     return null;
   }
 
