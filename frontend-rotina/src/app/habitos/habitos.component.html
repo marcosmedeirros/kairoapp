@@ -20,7 +20,18 @@
         </div>
       </div>
       <div class="habit-actions">
-        <button class="btn-ghost danger" (click)="removeHabit(h)">Remover</button>
+        <ng-container *ngIf="editingHabitId !== h.id; else editControls">
+          <button class="icon-btn" title="Editar" (click)="startEditHabit(h)">✏️</button>
+          <button class="btn-ghost danger" (click)="removeHabit(h)">Remover</button>
+        </ng-container>
+
+        <ng-template #editControls>
+          <div class="edit-inline">
+            <input class="edit-name-input" [(ngModel)]="editedHabitName" />
+            <button class="btn-submit" (click)="saveEditHabit(h)">Salvar</button>
+            <button class="btn-ghost" (click)="cancelEditHabit()">Cancelar</button>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

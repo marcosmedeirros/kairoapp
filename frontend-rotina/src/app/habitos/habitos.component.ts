@@ -28,6 +28,10 @@ export class HabitsComponent implements OnInit {
 
   storageKey = 'kairo.habits.v1';
 
+  // edição de nome
+  editingHabitId: string | null = null;
+  editedHabitName: string = '';
+
   constructor() {}
 
   ngOnInit(): void {
@@ -102,6 +106,26 @@ export class HabitsComponent implements OnInit {
 
   dayLabel(dateIso: string): string {
     return dateIso ? dateIso.substring(8,10) : '';
+  }
+
+  // EDIÇÃO DO NOME DO HÁBITO
+  startEditHabit(h: Habit) {
+    this.editingHabitId = h.id;
+    this.editedHabitName = h.name;
+  }
+
+  saveEditHabit(h: Habit) {
+    const name = (this.editedHabitName || '').trim();
+    if (!name) return; // não salva nome vazio
+    h.name = name;
+    this.editingHabitId = null;
+    this.editedHabitName = '';
+    this.save();
+  }
+
+  cancelEditHabit() {
+    this.editingHabitId = null;
+    this.editedHabitName = '';
   }
 
   removeHabit(h: Habit) {
